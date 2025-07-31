@@ -5,314 +5,181 @@
   <title>Arbre Généalogique - Gaïda Arami</title>
   <style>
     body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-    }
-
-    header {
-      background: #012622;
-      width: 100%;
+      background-color: #f0f0f0;
+      font-family: Arial, sans-serif;
+      padding: 40px;
       text-align: center;
-      padding: 20px;
-      font-size: 28px;
-      font-weight: bold;
-      letter-spacing: 2px;
     }
 
-    #searchBox {
-      margin: 20px;
-      padding: 12px 20px;
-      font-size: 18px;
-      width: 60%;
-      border: none;
-      border-radius: 12px;
-      outline: none;
-    }
-
-    #tree {
+    .tree {
       display: flex;
-      flex-wrap: wrap;
       justify-content: center;
-      gap: 40px;
-      padding: 20px;
+      align-items: flex-start;
     }
 
-    .person {
+    .tree ul {
+      padding-top: 20px;
+      position: relative;
+      display: flex;
+      justify-content: center;
+    }
+
+    .tree li {
+      list-style-type: none;
       text-align: center;
-      cursor: pointer;
+      margin: 0 20px;
+      position: relative;
+      padding: 20px 5px 0 5px;
     }
 
-    .person img {
-      width: 160px;
-      height: 160px;
-      border-radius: 50%;
-      border: 6px solid #00f5d4;
-      box-shadow: 0 0 20px rgba(0,0,0,0.5);
-      transition: transform 0.3s;
+    .tree li::before, .tree li::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      border-top: 2px solid #000;
+      width: 50%;
+      height: 20px;
     }
 
-    .person:hover img {
-      transform: scale(1.05);
+    .tree li::before {
+      left: -50%;
+      border-right: 2px solid #000;
     }
 
-    .person-name {
-      margin-top: 10px;
-      font-size: 20px;
-      font-weight: bold;
-      color: #ffffff;
+    .tree li::after {
+      right: -50%;
+      border-left: 2px solid #000;
     }
 
-    #backBtn {
-      margin: 10px;
-      padding: 10px 20px;
-      font-size: 16px;
-      border: none;
-      border-radius: 8px;
-      background-color: #00b4d8;
-      color: white;
-      cursor: pointer;
+    .tree li:only-child::before,
+    .tree li:only-child::after {
       display: none;
+    }
+
+    .tree li:only-child {
+      padding-top: 0;
+    }
+
+    .tree li:first-child::before,
+    .tree li:last-child::after {
+      border: none;
+    }
+
+    .tree li:last-child::before {
+      border-right: 2px solid #000;
+      border-radius: 0 0 0 5px;
+    }
+
+    .tree li:first-child::after {
+      border-left: 2px solid #000;
+      border-radius: 0 0 5px 0;
+    }
+
+    .box {
+      display: inline-block;
+      padding: 10px 15px;
+      background: #2EC4B6;
+      color: white;
+      border-radius: 8px;
+      border: 2px solid #023436;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
-  <header>🌳 Famille Gaïda Arami</header>
-  <input id="searchBox" type="text" placeholder="🔍 Rechercher un nom..." oninput="searchPerson()">
-  <button id="backBtn" onclick="goBack()">⬅ Revenir</button>
-  <div id="tree"></div>
 
-  <script>
-    const family = {
-      name: "Arami Boloumi",
-      children: [
-        { name: "Chelé",
-            children: [
-                 { name: "Bohodo" },
-            { name: "Tchatchamaï" },
-            { name: "Djahaka" },
-            { name: "Badié" },
-            { name: "Kodogoï" },
-            { name: "Tchambé" },
-            { name: "Billah" },
-            { name: " Herdé" },
-            { name: "Harmallah" },
-            { name: "Tchekeï" }
-          ]
-         },
-        { name: "Togoï Derdibili",
-            children: [
-            { name: "Maïna" },
-            { name: "Okor" },
-          ] },
-        { name: "Abayoskoy",
-            children: [
-            { name: "Dadi" },
-            { name: "Okor" },
-            { name: "Chiné" },
-            { name: "Bazine" },
-          ] 
-        },
-        { name: "Titir",
-            children: [
-            { name: "Sahanaï" },
-            { name: "Lodé" },
-            { name: "Barka" },
-            { name: "Togoï" },
-            { name: "Telebeï" },
-          ] 
-        },
-        { name: "Hindjeï",
-            children: [
-            { name: "Boudi" },
-          ]  
-         },
-        { name: "Karballah Bougoudi",
-            children: [
-            { name: "Bizallah" },
-            { name: "Halimé" },
-            { name: "Madigueï" },
-            { name: ".........." },
-          ]  },
-        { name: "Adama",
-            children: [
-            { name: "Woudaï" },
-            { name: "Dakin" },
-            { name: "Hawaï" },
-            { name: "Honi" },
-            { name: "Dagocheï" },
-          ] 
-         },
-        { name: "Doya",
-            children: [
-            { name: "Doudou" },
-            { name: "Ali" },
-            { name: "Dedeï" },
-            { name: "Madigueï" },
-            { name: "Dohoné" },
-          ] 
-         },
-        { name: "Kortegué",
-            children: [
-            { name: "Ereké" }
-            ] 
-         },
-        { name: "Ziné",
-            children: [
-            { name: "Chelé" },
-            { name: "Eï" }
-             ]
-         },
-        { name: "Tikidé",
-            children: [
-            { name: "Chaha" },
-            { name: "Atcha" }
-             ]
-         },
-        { name: "Khineï",
-            children: [
-            { name: "Boudi" }
-            ] 
-         },
-        {
-          name: "Eï",
-          children: [
-            { name: "Kossoma" },
-            { name: "Gourdé" },
-            { name: "Guissidé" },
-            { name: "Dadouma" },
-            { name: "Honi" },
-            { name: "Onoromi" },
-            { name: "Handagala" },
-            { name: "Soukoura" },
-            { name: "Koudin" },
-            { name: "Yeskin" },
-            { name: "Atcha" },
-            { name: "Meram" }
-          ]
-        },
-        {
-          name: "Naï",
-          children: [
-            {
-              name: "Mahamat",
-              children: [
-                { name: "   " }
-              ]
-            },
-            { name: "Allahi" },
-            { name: "Keré" },
-            { name: "Azza" },
-            { name: "Mihimi" },
-            { name: "Mouhouma" },
-            { name: "Yosko" },
-            { name: "Guihini" },
-            { name: "Deni" },
-            { name: "Boli" },
-            { name: "Djahini" },
-            { name: "Boukou" },
-            { name: "Hilé" },
-            { name: "Djedidé" },
-            { name: "Delébo" },
-          ]
-        }
-      ]
-    };
+  <h1>Arbre Généalogique de la Famille Gaïda Arami</h1>
 
-    let history = [];
+  <div class="tree">
+    <ul>
+      <li>
+        <div class="box">Arami Boloumi</div>
+        <ul>
+          <li>
+            <div class="box">Chelé</div>
+          </li>
+          <li>
+            <div class="box">Togoï Derdibili</div>
+          </li>
+          <li>
+            <div class="box">Abayoskoy</div>
+          </li>
+          <li>
+            <div class="box">Titir</div>
+          </li>
+          <li>
+            <div class="box">Hindjeï</div>
+          </li>
+          <li>
+            <div class="box">Karballah Bougoudi</div>
+          </li>
+          <li>
+            <div class="box">Adama</div>
+          </li>
+          <li>
+            <div class="box">Doya</div>
+          </li>
+          <li>
+            <div class="box">Kortegué</div>
+          </li>
+          <li>
+            <div class="box">Ziné</div>
+          </li>
+          <li>
+            <div class="box">Tikidé</div>
+          </li>
+          <li>
+            <div class="box">Khineï</div>
+          </li>
+          <li>
+            <div class="box">Eï</div>
+            <ul>
+              <li><div class="box">Kossoma</div></li>
+              <li><div class="box">Gourdé</div></li>
+              <li><div class="box">Guissidé</div></li>
+              <li><div class="box">Dadouma</div></li>
+              <li><div class="box">Honi</div></li>
+              <li><div class="box">Onoromi</div></li>
+              <li><div class="box">Handagala</div></li>
+              <li><div class="box">Soukoura</div></li>
+              <li><div class="box">Koudin</div></li>
+              <li><div class="box">Yeskin</div></li>
+              <li><div class="box">Atcha</div></li>
+              <li><div class="box">Meram</div></li>
+            </ul>
+          </li>
+          <li>
+            <div class="box">Naï</div>
+            <ul>
+              <li>
+                <div class="box">Mahamat</div>
+                <ul>
+                  <li><div class="box">Allahi</div></li>
+                </ul>
+              </li>
+              <li><div class="box">Allahi</div></li>
+              <li><div class="box">Keré</div></li>
+              <li><div class="box">Azza</div></li>
+              <li><div class="box">Mihimi</div></li>
+              <li><div class="box">Mouhouma</div></li>
+              <li><div class="box">Yosko</div></li>
+              <li><div class="box">Guihini</div></li>
+              <li><div class="box">Deni</div></li>
+              <li><div class="box">Bohodo</div></li>
+              <li><div class="box">Tchatchamaï</div></li>
+              <li><div class="box">Djahaka</div></li>
+              <li><div class="box">Badié</div></li>
+              <li><div class="box">Kodogoï</div></li>
+              <li><div class="box">Tchambé</div></li>
+              <li><div class="box">Laali</div></li>
+              <li><div class="box">Naiyam</div></li>
+              <li><div class="box">Amazada</div></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
 
-    function displayPerson(person) {
-      const tree = document.getElementById("tree");
-      tree.innerHTML = "";
-      document.getElementById("backBtn").style.display = history.length ? "inline-block" : "none";
-
-      if (!person.children || person.children.length === 0) {
-        const msg = document.createElement("p");
-        msg.innerText = "Aucun enfant trouvé.";
-        tree.appendChild(msg);
-        return;
-      }
-
-      person.children.forEach(child => {
-        const div = document.createElement("div");
-        div.className = "person";
-        div.onclick = () => {
-          history.push(person);
-          displayPerson(child);
-        };
-
-        const img = document.createElement("img");
-        img.src = "https://via.placeholder.com/160"; // mets une vraie image ici si tu veux
-
-        const name = document.createElement("div");
-        name.className = "person-name";
-        name.textContent = child.name;
-
-        div.appendChild(img);
-        div.appendChild(name);
-        tree.appendChild(div);
-      });
-    }
-
-    function displayRoot() {
-      const tree = document.getElementById("tree");
-      tree.innerHTML = "";
-      history = [];
-
-      const div = document.createElement("div");
-      div.className = "person";
-      div.onclick = () => {
-        history.push(family);
-        displayPerson(family);
-      };
-
-      const img = document.createElement("img");
-      img.src = "https://via.placeholder.com/160";
-
-      const name = document.createElement("div");
-      name.className = "person-name";
-      name.textContent = family.name;
-
-      div.appendChild(img);
-      div.appendChild(name);
-      tree.appendChild(div);
-
-      document.getElementById("backBtn").style.display = "none";
-    }
-
-    function goBack() {
-      const prev = history.pop();
-      if (prev) displayPerson(prev);
-      else displayRoot();
-    }
-
-    function searchPerson() {
-      const query = document.getElementById("searchBox").value.trim().toLowerCase();
-      if (!query) return displayRoot();
-
-      const path = findPath(family, query);
-      if (path) {
-        history = path.slice(0, -1);
-        displayPerson(path[path.length - 1]);
-      }
-    }
-
-    function findPath(node, target, path = []) {
-      if (node.name.toLowerCase() === target) return [...path, node];
-      if (!node.children) return null;
-      for (let child of node.children) {
-        const result = findPath(child, target, [...path, node]);
-        if (result) return result;
-      }
-      return null;
-    }
-
-    displayRoot();
-  </script>
 </body>
 </html>
