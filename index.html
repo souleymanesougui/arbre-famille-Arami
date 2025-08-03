@@ -7,7 +7,7 @@
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      background: linear-gradient(to right, #CBF3F0, #2EC4B6, #fffae3);
       color: #fff;
       display: flex;
       flex-direction: column;
@@ -16,7 +16,7 @@
     }
 
     header {
-      background: #012622;
+      background: #273e47;
       width: 100%;
       text-align: center;
       padding: 20px;
@@ -68,7 +68,8 @@
     }
 
     .person:hover img {
-      transform: scale(1.05);
+      transform: rotatex(360deg);
+      transition: 2s;
     }
 
     .person-name {
@@ -373,16 +374,35 @@
                 { name: "Izé Hassan" },
                  ]
                 },
-                { name: "Choua",
+                { name: "Choua", photo: "Choua.jpg",
               children: [
                 { name: "Idriss Choua",
                   children:[
                     {name:"Moussa Idriss"},
-                    {name:"Souleymane Idriss"},
-                    {name:"Mahamat Idriss"},
+                    {name:"Souleymane Idriss",
+                      children:[
+                        {name:"Idriss Souleymane Idriss"},
+                      ]
+                    },
+                    {name:"Mahamat Idriss",
+                      children:[
+                        {name:"Amira Mahamat Idriss"},
+                      ]
+                     },
                     {name:"Youssouf Idriss"},
-                    {name:"Fatimé Idriss"},
-                    {name:"Kaltoum Idriss"},
+                    {name:"Fatimé Idriss",
+                      children:[
+                        {name:"Seïf Adine"},
+                        {name:"Abdelaziz Mahamat"},
+                        {name:"Brahim Mahamat"},
+                        {name:"Abakar Mahamat"},
+                        {name:"Hawa Mahamat"},
+                        {name:"Khadidja Mahamat"},
+                      ]},
+                    {name:"Kaltoum Idriss",
+                      children:[
+                        {name:"Idriss ..."},
+                      ]},
                     {name:"Hallom Idriss"}
                   ]
                  },
@@ -400,21 +420,43 @@
                         {name:"Abakar Mahamat Abakar"}
                       ]
                     },
-                    {name:"Djidi Abakar Choua"},
-                    {name:"Sokoto Abakar Choua"},
-                    {name:"Wassaï Abakar Choua"},
-                    {name:"Hassan Abakar Choua"},
-                    {name:"Choua Abakar Choua"},
+                    {name:"Djidi Abakar Choua",photo:"Djidi Abakar Choua.jpg"},
+                    {name:"Sokoto Abakar Choua",photo:"Sokoto Abakar Choua.jpg"},
+                    {name:"Wassaï Abakar Choua",photo:"Wassaï Abakar Choua.jpg"},
+                    {name: "Hassan Abakar Choua", photo: "Hassan Abakar Choua.jpg"},
+                    {name:"Choua Abakar Choua",photo:"Choua Abakar Choua.jpg"},
                     {name:"Guedé Abakar Choua"},
                     {name:"Adoum Abakar Choua"},
                     {name:"Youssouf Abakar Choua"},
                     {name:"Idriss Abakar Choua"},
-                    {name:"Galié Abakar Choua"},
-                    {name:"Hazallah Abakar Choua"},
+                    {name:"Galié Abakar Choua",
+                      children:[
+                        {name:"Abakar Oumar"},
+                        {name:"Mahamat Oumar"},
+                        {name:"Haroun Oumar"},
+                        {name:"Wassaï Oumar"},
+                        {name:"Nounou Oumar"},
+                        {name:"Sadié Oumar"},
+                        {name:"Naga Oumar"},
+                      ]
+                    },
+                    {name:"Hazallah Abakar Choua",
+                      children:[
+                        {name:"Youssouf Hissen"},
+                        {name:"Mahamat Hissen"},
+                        {name:"Hedjeï Hissen"},
+                        {name:"Sadié Hissen"},
+                      ]
+                    },
                     {name:"Amboua Abakar Choua"},
                     {name:"Mariam Naga Abakar Choua"},
                     {name:"Zanaba Abakar Choua"},
-                    {name:"Khadidja Abakar Choua"},
+                    {name:"Khadidja Abakar Choua",
+                      children:[
+                        {name:"Abakar Oki"},
+                        {name:"Djanat Oki"},
+                      ]
+                    },
                     {name:"Herdé Abakar Choua"},
                     {name:"Fatimé Abakar Choua"},
                     {name:"Nassirin Abakar Choua"},
