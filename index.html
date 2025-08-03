@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Arbre Généalogique - Gaïda Arami</title>
+  <title>Gaïda Arami</title>
   <style>
     body {
       margin: 0;
@@ -103,7 +103,6 @@
   <input id="searchBox" type="text" placeholder=" Rechercher un nom..." oninput="searchPerson()">
   <button id="backBtn" onclick="goBack()">⬅ Revenir</button>
   <div id="tree"></div>
-
   <script>
     const family = {
       name: "Arami Boloumi",
@@ -378,7 +377,7 @@
               children: [
                 { name: "Idriss Choua" },
                 { name: "Ahmat Choua" },
-                { name: "Abakar Choua" },
+                { name: "Abakar Choua", },
                 { name: "Abdallah Choua" },
                 { name: "Youssouf Choua" },
                 { name: "Zanaba Chouado" },
@@ -764,6 +763,7 @@
         };
 
         const img = document.createElement("img");
+        img.src = child.photo ? "photos/" + child.photo : "ssi.jpg"; 
         img.src = "ssi.jpg";
 
         const name = document.createElement("div");
