@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <meta name="google-site-verification" content="jlqlGzhp6tqTZ-sI6PCuMjZ7FtCsctml2RRX5JizTrM" />
-  <meta name="description" content="Arbre généalogique de la famille Gaïda Arami, visualisez les membres et leurs descendants facilement." />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Arbre généalogique de la famille Gaïda Arami, visualisez les membres et leurs descendants facilement.">
   <title>Gaïda Arami</title>
   <style>
     body {
@@ -16,8 +15,6 @@
       flex-direction: column;
       align-items: center;
       min-height: 100vh;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
     }
 
     header {
@@ -35,7 +32,6 @@
       padding: 12px 20px;
       font-size: 18px;
       width: 60%;
-      max-width: 400px;
       border: none;
       border-radius: 50px;
       outline: none;
@@ -49,7 +45,6 @@
       background-size: 20px;
       background-position: 15px center;
       padding-left: 45px;
-      box-sizing: border-box;
     }
 
     #tree {
@@ -58,16 +53,11 @@
       justify-content: center;
       gap: 40px;
       padding: 20px;
-      width: 100%;
-      max-width: 1200px;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch; /* défilement fluide sur iOS */
     }
 
     .person {
       text-align: center;
       cursor: pointer;
-      flex: 0 0 auto;
     }
 
     .person img {
@@ -77,30 +67,21 @@
       border: 6px solid #00f5d4;
       box-shadow: 0 0 20px rgba(0,0,0,0.5);
       transition: transform 0.3s;
-      object-fit: cover;
     }
 
-    .person:hover img {
-      transform: rotatex(360deg);
-      transition: 2s;
-    }
 
     .person-name {
       margin-top: 10px;
       font-size: 20px;
       font-weight: bold;
       color: #ffffff;
-      max-width: 180px;
-      word-wrap: break-word;
     }
 
     #backBtn {
-      margin: 20px;
+       margin: 20px;
       padding: 12px 20px;
       font-size: 18px;
       width: 20%;
-      min-width: 120px;
-      max-width: 200px;
       border: none;
       border-radius: 80px;
       outline: none;
@@ -113,53 +94,19 @@
       background-size: 20px;
       background-position: 15px center;
       padding-left: 45px;
-      cursor: pointer;
-    }
-
-    /* Responsive pour petits écrans */
-    @media (max-width: 600px) {
-      #searchBox {
-        width: 90%;
-        font-size: 16px;
-        padding-left: 40px;
-      }
-
-      #tree {
-        gap: 20px;
-        padding: 10px;
-      }
-
-      .person img {
-        width: 120px;
-        height: 120px;
-        border-width: 4px;
-      }
-
-      .person-name {
-        font-size: 16px;
-        max-width: 140px;
-      }
-
-      #backBtn {
-        width: 50%;
-        font-size: 16px;
-        padding-left: 40px;
-      }
     }
   </style>
 </head>
 <body>
   <header>🌳 Famille Gaïda Arami</header>
-  <input id="searchBox" type="text" placeholder=" Rechercher un nom..." oninput="searchPerson()" />
+  <input id="searchBox" type="text" placeholder=" Rechercher un nom..." oninput="searchPerson()">
   <button id="backBtn" onclick="goBack()">⬅ Revenir</button>
   <div id="tree"></div>
-
   <script>
     const family = {
       name: "Arami Bollou",
       children: [
-        // ton objet family complet ici (comme dans ton code initial)
-          { name: "Chelé",
+        { name: "Chelé",
             children: [
             { name: "Bohodo" },
             { name: "Tchatchamaï" },
@@ -1014,8 +961,6 @@
         }
       ]
     };
-      ]
-    };
 
     let history = [];
 
@@ -1040,7 +985,8 @@
         };
 
         const img = document.createElement("img");
-        img.src = child.photo ? "photos/" + child.photo : "ssi.jpg";
+        img.src = child.photo ? "photos/" + child.photo : "ssi.jpg"; 
+        
 
         const name = document.createElement("div");
         name.className = "person-name";
@@ -1066,6 +1012,7 @@
 
       const img = document.createElement("img");
       img.src = "ssi.jpg";
+
 
       const name = document.createElement("div");
       name.className = "person-name";
@@ -1104,7 +1051,6 @@
       }
       return null;
     }
-
     displayRoot();
   </script>
 </body>
