@@ -115,6 +115,7 @@
 
 <body>
   <header>🌳 Les fils Gaïda</header>
+  <div id="google_translate_element" style="margin:15px;"></div>
   <input id="searchBox" type="text" placeholder=" Rechercher un nom..." oninput="searchPerson()">
   <button id="backBtn" onclick="goBack()">⬅ Revenir</button>
   <div id="tree"></div>
@@ -1122,5 +1123,16 @@
     }
     displayRoot();
   </script>
+  <script>
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: 'fr',
+    includedLanguages: 'ar',
+    layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+  }, 'google_translate_element');
+}
+</script>
+
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
