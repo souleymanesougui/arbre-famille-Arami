@@ -51,81 +51,155 @@
     header {
       background: linear-gradient(135deg, var(--primary), var(--secondary));
       width: 100%;
+      padding: 12px 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      position: relative;
+      min-height: 60px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .header-center {
+      flex: 1;
       text-align: center;
-      padding: 20px 15px;
-      font-size: clamp(20px, 6vw, 32px);
+      font-size: clamp(16px, 4vw, 28px);
       font-weight: 600;
       letter-spacing: 1px;
       color: var(--light);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
       text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
-      margin-bottom: 15px;
-      position: relative;
+      min-width: 120px;
     }
 
-    /* Conteneur pour le widget de traduction */
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    /* Bouton Histoire */
+    .history-btn {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: white;
+      padding: 6px 14px;
+      border-radius: 30px;
+      font-size: clamp(12px, 2vw, 14px);
+      cursor: pointer;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-weight: 500;
+      backdrop-filter: blur(4px);
+      transition: all 0.3s ease;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .history-btn:hover {
+      background: rgba(255,255,255,0.3);
+      transform: translateY(-1px);
+    }
+
+    .history-btn:active {
+      transform: translateY(1px);
+    }
+
+    /* Widget Google Traduction - version compacte */
     #google_translate_element {
-      margin: 12px auto;
-      padding: 10px 15px;
-      background: var(--card-bg);
-      border-radius: 50px;
-      box-shadow: var(--shadow);
-      border: 1px solid rgba(142, 68, 173, 0.2);
+      background: rgba(255,255,255,0.12);
+      border-radius: 30px;
+      padding: 3px 8px;
+      border: 1px solid rgba(255,255,255,0.2);
+      backdrop-filter: blur(4px);
       display: inline-block;
-      width: auto;
-      min-width: 200px;
+      min-width: 100px;
     }
+
     #google_translate_element .goog-te-gadget {
-      color: var(--text-dark) !important;
+      color: white !important;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+      font-size: 13px !important;
     }
+
     #google_translate_element .goog-te-gadget-simple {
       background-color: transparent !important;
       border: none !important;
-      padding: 5px 10px !important;
-      border-radius: 30px !important;
-    }
-    #google_translate_element .goog-te-gadget-simple .goog-te-menu-value {
-      color: var(--text-dark) !important;
-      font-size: 14px !important;
+      padding: 2px 6px !important;
+      border-radius: 20px !important;
     }
 
+    #google_translate_element .goog-te-gadget-simple .goog-te-menu-value {
+      color: white !important;
+      font-size: 13px !important;
+      font-weight: 400 !important;
+    }
+
+    #google_translate_element .goog-te-gadget-simple .goog-te-menu-value span {
+      color: white !important;
+    }
+
+    #google_translate_element .goog-te-gadget-simple img {
+      display: none !important;
+    }
+
+    /* Masquer le bandeau Google en haut */
+    .goog-te-banner-frame {
+      display: none !important;
+    }
+    body {
+      top: 0 !important;
+    }
+
+    /* Fil d'Ariane */
     .breadcrumb {
       background: linear-gradient(135deg, var(--primary), var(--secondary));
       width: 100%;
-      padding: 15px 10px;
-      font-size: clamp(14px, 4vw, 18px);
+      padding: 12px 15px;
+      font-size: clamp(13px, 3vw, 16px);
       color: var(--light);
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      margin-bottom: 15px;
+      margin-bottom: 10px;
       text-align: center;
       word-wrap: break-word;
-      display: none; /* caché par défaut, affiché via JS */
+      display: none;
     }
 
     .breadcrumb a {
-      color: var(--light);
+      color: #9b59b6;
       text-decoration: none;
       cursor: pointer;
-      padding: 5px 8px;
+      padding: 4px 8px;
       border-radius: 5px;
       transition: background-color 0.3s;
       display: inline-block;
       margin: 2px;
+      font-weight: 500;
     }
 
     .breadcrumb a:hover {
-      background-color: rgba(255, 255, 255, 0.2);
+      background-color: rgba(255, 255, 255, 0.15);
+      color: white;
     }
 
     .breadcrumb span {
-      margin: 0 8px;
+      margin: 0 6px;
       color: #9b59b6;
     }
 
     #searchBox {
-      margin: 20px 15px;
-      padding: 15px 20px 15px 50px;
+      margin: 15px 15px 10px;
+      padding: 12px 20px 12px 45px;
       font-size: clamp(14px, 4vw, 16px);
       width: 90%;
       max-width: 500px;
@@ -139,7 +213,7 @@
       background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="%238E44AD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>');
       background-repeat: no-repeat;
       background-size: 18px;
-      background-position: 20px center;
+      background-position: 18px center;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
@@ -212,11 +286,11 @@
     }
 
     #backBtn {
-      margin: 15px;
-      padding: 12px 25px;
+      margin: 10px 15px;
+      padding: 10px 25px;
       font-size: clamp(14px, 4vw, 16px);
       width: auto;
-      min-width: 160px;
+      min-width: 140px;
       border: none;
       border-radius: 50px;
       outline: none;
@@ -227,7 +301,7 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       font-weight: 600;
       letter-spacing: 0.5px;
-      display: none; /* caché par défaut */
+      display: none;
     }
 
     #backBtn:hover {
@@ -253,7 +327,80 @@
       margin: 10px;
     }
 
-    /* Améliorations pour mobile */
+    /* Modal pour l'histoire */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(6px);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 20px;
+      max-width: 600px;
+      width: 100%;
+      max-height: 80vh;
+      overflow-y: auto;
+      padding: 30px 25px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      position: relative;
+      animation: modalFadeIn 0.3s ease;
+    }
+
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: scale(0.95) translateY(20px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 12px;
+      right: 18px;
+      font-size: 28px;
+      cursor: pointer;
+      color: #999;
+      background: none;
+      border: none;
+      transition: color 0.3s;
+      line-height: 1;
+    }
+
+    .modal-close:hover {
+      color: #333;
+    }
+
+    .modal-content h2 {
+      color: var(--primary);
+      margin-top: 0;
+      border-bottom: 3px solid var(--accent);
+      padding-bottom: 12px;
+      font-size: 24px;
+    }
+
+    .modal-content p {
+      color: var(--text-dark);
+      line-height: 1.8;
+      font-size: 16px;
+      text-align: left;
+      padding: 0;
+      background: none;
+      box-shadow: none;
+      margin: 15px 0;
+    }
+
     @media (max-width: 480px) {
       .person {
         width: calc(50% - 10px);
@@ -266,22 +413,41 @@
       
       #searchBox {
         width: 95%;
-        margin: 15px 10px;
-        padding: 12px 15px 12px 45px;
+        margin: 12px 10px 8px;
+        padding: 10px 14px 10px 40px;
       }
-      
+
       header {
-        padding: 15px 10px;
+        padding: 8px 12px;
+        min-height: 50px;
       }
-      
+
+      .header-center {
+        font-size: clamp(14px, 3.5vw, 20px);
+      }
+
+      .history-btn {
+        padding: 4px 10px;
+        font-size: 11px;
+      }
+
+      #google_translate_element {
+        min-width: 80px;
+        padding: 2px 6px;
+      }
+
+      #google_translate_element .goog-te-gadget-simple .goog-te-menu-value {
+        font-size: 11px !important;
+      }
+
       #tree {
         gap: 15px;
         padding: 10px;
       }
 
-      #google_translate_element {
-        min-width: 150px;
-        padding: 8px 12px;
+      .modal-content {
+        padding: 20px 15px;
+        max-height: 85vh;
       }
     }
 
@@ -290,24 +456,78 @@
         width: 100%;
         max-width: 150px;
       }
+
+      .header-center {
+        font-size: 12px;
+      }
+
+      .history-btn {
+        font-size: 10px;
+        padding: 3px 8px;
+      }
+
+      #google_translate_element {
+        min-width: 60px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      header {
+        flex-wrap: nowrap;
+        justify-content: space-between;
+      }
+      .header-center {
+        font-size: clamp(12px, 3vw, 16px);
+        min-width: 60px;
+      }
+      .header-left, .header-right {
+        flex-shrink: 0;
+      }
     }
   </style>
 </head>
 <body>
-  <header id="mainHeader">🌳 Les fils Gaïda</header>
+  <header>
+    <div class="header-left">
+      <button class="history-btn" onclick="openHistoryModal()">📖 Histoire</button>
+    </div>
+    <div class="header-center" id="mainHeader">🌳 Les fils Gaïda</div>
+    <div class="header-right">
+      <div id="google_translate_element"></div>
+    </div>
+  </header>
 
-  <!-- Widget de traduction -->
-  <div id="google_translate_element"></div>
-
-  <!-- Fil d'Ariane (caché par défaut) -->
+  <!-- Fil d'Ariane -->
   <div id="breadcrumb" class="breadcrumb"></div>
 
   <input id="searchBox" type="text" placeholder="Rechercher un nom..." oninput="searchPerson()">
   <button id="backBtn" onclick="goBack()">⬅ Retour à l'accueil</button>
   <div id="tree"></div>
 
+  <!-- Modal Histoire -->
+  <div class="modal-overlay" id="historyModal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeHistoryModal()">&times;</button>
+      <h2>📖 L'histoire des fils Gaïda</h2>
+      <p>
+        La lignée des <strong>fils Gaïda</strong> est une famille dont les racines plongent 
+        au cœur des traditions et de l'histoire. Ce site a été créé pour préserver la mémoire 
+        et l'arbre généalogique de cette famille, afin que chaque génération puisse connaître 
+        ses origines et son héritage.
+      </p>
+      <p>
+        Chaque nom sur cet arbre est une branche, un lien qui relie le passé au présent. 
+        Nous vous invitons à explorer cet héritage familial et à contribuer à sa transmission 
+        aux générations futures.
+      </p>
+      <p style="font-style: italic; color: var(--accent);">
+        — Que la mémoire de nos ancêtres vive à travers nous.
+      </p>
+    </div>
+  </div>
+
   <script>
-    // ---------- DONNÉES FAMILIALES (inchangées) ----------
+    // ---------- DONNÉES FAMILIALES ----------
     const family = {
       name: "Bollou Oumar",
       children: [
@@ -1221,11 +1441,10 @@
       ]},]
     };
 
-    // ---------- LOGIQUE ARBRE (adaptée) ----------
+    // ---------- LOGIQUE ARBRE ----------
     let history = [];
     let currentPath = [];
 
-    // Références DOM
     const treeEl = document.getElementById('tree');
     const backBtn = document.getElementById('backBtn');
     const breadcrumbEl = document.getElementById('breadcrumb');
@@ -1233,18 +1452,14 @@
 
     function displayPerson(person) {
       treeEl.innerHTML = "";
-      // Afficher ou cacher le bouton retour
       backBtn.style.display = history.length ? "inline-block" : "none";
 
-      // Mise à jour du chemin
       if (person !== currentPath[currentPath.length - 1]) {
         currentPath.push(person);
       }
 
-      // Mise à jour du fil d'Ariane
       updateBreadcrumb();
 
-      // Si pas d'enfants
       if (!person.children || person.children.length === 0) {
         const msg = document.createElement("p");
         msg.innerText = "La liste des enfants n'est pas encore complète, elle est en cours d'élaboration.";
@@ -1252,7 +1467,6 @@
         return;
       }
 
-      // Afficher les enfants
       person.children.forEach(child => {
         const div = document.createElement("div");
         div.className = "person";
@@ -1262,10 +1476,8 @@
         };
 
         const img = document.createElement("img");
-        // Gestion des photos (si présentes)
         img.src = child.photo ? "photos/" + child.photo : "ssi.jpg";
         img.alt = `Photo de ${child.name}`;
-        // Fallback si l'image ne charge pas
         img.onerror = function() {
           this.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="170" height="170" viewBox="0 0 170 170"><rect width="170" height="170" fill="%23ECF0F1" rx="85"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="60" fill="%238E44AD">' + child.name.charAt(0) + '</text></svg>';
         };
@@ -1374,6 +1586,27 @@
       }
       return null;
     }
+
+    // ---------- MODAL HISTOIRE ----------
+    function openHistoryModal() {
+      document.getElementById('historyModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeHistoryModal() {
+      document.getElementById('historyModal').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    // Fermer en cliquant sur le fond
+    document.getElementById('historyModal').addEventListener('click', function(e) {
+      if (e.target === this) closeHistoryModal();
+    });
+
+    // Fermer avec Echap
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeHistoryModal();
+    });
 
     // ---------- INIT ----------
     currentPath = [family];
