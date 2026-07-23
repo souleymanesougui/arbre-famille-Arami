@@ -109,6 +109,64 @@
       background-position: 15px center;
       padding-left: 45px;
     }
+    /* Adaptation téléphone tablette ordinateur */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+header {
+  font-size: clamp(20px, 5vw, 28px);
+  padding: 15px;
+}
+
+#searchBox {
+  width: 90%;
+  max-width: 600px;
+  font-size: clamp(14px, 3vw, 18px);
+}
+
+#backBtn {
+  width: 50%;
+  max-width: 250px;
+  font-size: clamp(14px, 3vw, 18px);
+}
+
+#tree {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 25px;
+  padding: 15px;
+}
+
+.person img {
+  width: clamp(90px, 20vw, 160px);
+  height: clamp(90px, 20vw, 160px);
+}
+
+.person-name {
+  font-size: clamp(14px, 3vw, 20px);
+  word-break: break-word;
+}
+
+
+@media (max-width: 500px) {
+
+  #tree {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+
+  .person img {
+    border-width: 4px;
+  }
+
+}
   </style>
  </head>
 
