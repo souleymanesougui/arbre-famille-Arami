@@ -9,6 +9,7 @@
   <meta name="author" content="Souleymane Sougui Idriss">
   <link rel="canonical" href="https://souleymanesougui.github.io/Gaway/">
   <title>Les fils Gaïda</title>
+  
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-JMQ004JQ2L"></script>
   <script>
@@ -17,6 +18,7 @@
     gtag('js', new Date());
     gtag('config', 'G-JMQ004JQ2L');
   </script>
+  
   <style>
     :root {
       --primary: #2C3E50;
@@ -88,7 +90,6 @@
       flex-shrink: 0;
     }
 
-    /* Bouton Histoire */
     .history-btn {
       background: rgba(255,255,255,0.15);
       border: 1px solid rgba(255,255,255,0.3);
@@ -116,7 +117,6 @@
       transform: translateY(1px);
     }
 
-    /* Widget Google Traduction - version compacte */
     #google_translate_element {
       background: rgba(255,255,255,0.12);
       border-radius: 30px;
@@ -154,7 +154,6 @@
       display: none !important;
     }
 
-    /* Masquer le bandeau Google en haut */
     .goog-te-banner-frame {
       display: none !important;
     }
@@ -162,7 +161,6 @@
       top: 0 !important;
     }
 
-    /* Fil d'Ariane */
     .breadcrumb {
       background: linear-gradient(135deg, var(--primary), var(--secondary));
       width: 100%;
@@ -328,7 +326,6 @@
       margin: 10px;
     }
 
-    /* Modal pour l'histoire */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -498,14 +495,12 @@
     </div>
   </header>
 
-  <!-- Fil d'Ariane -->
   <div id="breadcrumb" class="breadcrumb"></div>
 
   <input id="searchBox" type="text" placeholder="Rechercher un nom..." oninput="searchPerson()">
   <button id="backBtn" onclick="goBack()">⬅ Retour à l'accueil</button>
   <div id="tree"></div>
 
-  <!-- Modal Histoire -->
   <div class="modal-overlay" id="historyModal">
     <div class="modal-content">
       <button class="modal-close" onclick="closeHistoryModal()">&times;</button>
@@ -527,351 +522,188 @@
     </div>
   </div>
 
-    // ---------- DONNÉES FAMILIALES ----------
-
-      <script type="module">
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
-import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
-
-
-const firebaseConfig = {
-  apiKey: "AIzaSyDh1sYrwm5dTG3ktVHprKzE3Gr7fRmxOzfQ",
-  authDomain: "gaway-290bc.firebaseapp.com",
-  projectId: "gaway-290bc",
-  storageBucket: "gaway-290bc.firebasestorage.app",
-  messagingSenderId: "1061998444067",
-  appId: "1:1061998444067:web:4979bcd90e56f42fd4bb96"
-};
-
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-
-let family = null;
-let history = [];
-let currentPath = [];
-
-
-const treeEl = document.getElementById('tree');
-const backBtn = document.getElementById('backBtn');
-const breadcrumbEl = document.getElementById('breadcrumb');
-const mainHeader = document.getElementById('mainHeader');
-
-
-// Charger la famille depuis Firebase
-
-async function chargerFamille(){
-
-  const ref = doc(db,"Famille","bollou_oumar");
-
-  const resultat = await getDoc(ref);
-
-
-  if(resultat.exists()){
-
-    family = resultat.data();
-
-    currentPath=[family];
-
-    displayRoot();
-
-  }else{
-
-    treeEl.innerHTML="<p>Aucune donnée trouvée.</p>";
-
-  }
-
-}
-
-
-chargerFamille();
-
-
-
-
-// Afficher une personne
-
-function displayPerson(person){
-
-treeEl.innerHTML="";
-
-backBtn.style.display = history.length ? "inline-block":"none";
-
-
-updateBreadcrumb();
-
-
-
-if(!person.children || person.children.length===0){
-
-treeEl.innerHTML=
-"<p>La liste des enfants n'est pas encore complète.</p>";
-
-return;
-
-}
-
-
-
-person.children.forEach(child=>{
-
-
-const div=document.createElement("div");
-
-div.className="person";
-
-
-div.onclick=()=>{
-
-history.push(person);
-
-currentPath.push(child);
-
-displayPerson(child);
-
-};
-
-
-
-const img=document.createElement("img");
-
-img.src=child.photo ? "photos/"+child.photo : "ssi.jpg";
-
-img.alt=child.name;
-
-
-
-const name=document.createElement("div");
-
-name.className="person-name";
-
-name.textContent=child.name;
-
-
-
-div.appendChild(img);
-
-div.appendChild(name);
-
-
-treeEl.appendChild(div);
-
-
-
-});
-
-
-}
-
-
-
-
-// Accueil
-
-function displayRoot(){
-
-treeEl.innerHTML="";
-
-history=[];
-
-currentPath=[family];
-
-backBtn.style.display="none";
-
-mainHeader.style.display="block";
-
-breadcrumbEl.style.display="none";
-
-mainHeader.textContent="🌳 Les fils Gaïda";
-
-
-
-const div=document.createElement("div");
-
-div.className="person";
-
-
-div.onclick=()=>{
-
-history.push(family);
-
-displayPerson(family);
-
-};
-
-
-
-const img=document.createElement("img");
-
-img.src="ssi.jpg";
-
-
-const name=document.createElement("div");
-
-name.className="person-name";
-
-name.textContent=family.name;
-
-
-div.appendChild(img);
-
-div.appendChild(name);
-
-
-treeEl.appendChild(div);
-
-
-}
-
-
-
-
-// Retour
-
-function goBack(){
-
-if(history.length){
-
-const prev=history.pop();
-
-currentPath.pop();
-
-displayPerson(prev);
-
-}else{
-
-displayRoot();
-
-}
-
-}
-
-
-
-window.goBack=goBack;
-
-
-
-
-// Fil d'Ariane
-
-function updateBreadcrumb(){
-
-if(currentPath.length<=1){
-
-breadcrumbEl.style.display="none";
-
-mainHeader.style.display="block";
-
-
-}else{
-
-mainHeader.style.display="none";
-
-breadcrumbEl.style.display="block";
-
-
-breadcrumbEl.innerHTML="Enfants de ";
-
-currentPath.forEach((p,i)=>{
-
-if(i>0){
-
-breadcrumbEl.innerHTML += 
-" ➜ "+p.name;
-
-}
-
-});
-
-
-}
-
-}
-
-
-
-
-// Recherche
-
-window.searchPerson=function(){
-
-const q=document.getElementById("searchBox").value.toLowerCase();
-
-
-if(!q){
-
-displayRoot();
-
-return;
-
-}
-
-
-const result=findPath(family,q);
-
-
-if(result){
-
-history=result.slice(0,-1);
-
-currentPath=result;
-
-displayPerson(result[result.length-1]);
-
-}
-
-
-}
-
-
-
-function findPath(node,q,path=[]){
-
-if(node.name.toLowerCase().includes(q)){
-
-return [...path,node];
-
-}
-
-
-if(!node.children)return null;
-
-
-for(let child of node.children){
-
-let r=findPath(child,q,[...path,node]);
-
-if(r)return r;
-
-}
-
-
-return null;
-
-}
-
-
-
-// Histoire
-
-window.openHistoryModal=function(){
-
-document.getElementById("historyModal").classList.add("active");
-
-}
-
-
-
-window.closeHistoryModal=function(){
-
-document.getElementById("historyModal").classList.remove("active");
-
-}
-
-
-</script>
+  <!-- ===== TOUT LE JAVASCRIPT EST ICI ===== -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+
+    // Configuration Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyDh1sYrwm5dTG3ktVHprKzE3Gr7fRmxOzfQ",
+      authDomain: "gaway-290bc.firebaseapp.com",
+      projectId: "gaway-290bc",
+      storageBucket: "gaway-290bc.firebasestorage.app",
+      messagingSenderId: "1061998444067",
+      appId: "1:1061998444067:web:4979bcd90e56f42fd4bb96"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    let family = null;
+    let history = [];
+    let currentPath = [];
+
+    const treeEl = document.getElementById('tree');
+    const backBtn = document.getElementById('backBtn');
+    const breadcrumbEl = document.getElementById('breadcrumb');
+    const mainHeader = document.getElementById('mainHeader');
+
+    // Charger la famille depuis Firebase
+    async function chargerFamille() {
+      try {
+        const ref = doc(db, "Famille", "bollou_oumar");
+        const resultat = await getDoc(ref);
+
+        if (resultat.exists()) {
+          family = resultat.data();
+          currentPath = [family];
+          displayRoot();
+        } else {
+          treeEl.innerHTML = "<p>Aucune donnée trouvée.</p>";
+        }
+      } catch (error) {
+        console.error("Erreur de chargement :", error);
+        treeEl.innerHTML = "<p>Erreur lors du chargement des données.</p>";
+      }
+    }
+
+    // Afficher une personne
+    function displayPerson(person) {
+      treeEl.innerHTML = "";
+      backBtn.style.display = history.length ? "inline-block" : "none";
+      updateBreadcrumb();
+
+      if (!person.children || person.children.length === 0) {
+        treeEl.innerHTML = "<p>La liste des enfants n'est pas encore complète.</p>";
+        return;
+      }
+
+      person.children.forEach(child => {
+        const div = document.createElement("div");
+        div.className = "person";
+
+        div.onclick = () => {
+          history.push(person);
+          currentPath.push(child);
+          displayPerson(child);
+        };
+
+        const img = document.createElement("img");
+        img.src = child.photo ? "photos/" + child.photo : "ssi.jpg";
+        img.alt = child.name;
+
+        const name = document.createElement("div");
+        name.className = "person-name";
+        name.textContent = child.name;
+
+        div.appendChild(img);
+        div.appendChild(name);
+        treeEl.appendChild(div);
+      });
+    }
+
+    // Accueil
+    function displayRoot() {
+      treeEl.innerHTML = "";
+      history = [];
+      currentPath = [family];
+      backBtn.style.display = "none";
+      mainHeader.style.display = "block";
+      breadcrumbEl.style.display = "none";
+      mainHeader.textContent = "🌳 Les fils Gaïda";
+
+      if (!family) return;
+
+      const div = document.createElement("div");
+      div.className = "person";
+
+      div.onclick = () => {
+        history.push(family);
+        displayPerson(family);
+      };
+
+      const img = document.createElement("img");
+      img.src = "ssi.jpg";
+
+      const name = document.createElement("div");
+      name.className = "person-name";
+      name.textContent = family.name;
+
+      div.appendChild(img);
+      div.appendChild(name);
+      treeEl.appendChild(div);
+    }
+
+    // Retour
+    function goBack() {
+      if (history.length) {
+        const prev = history.pop();
+        currentPath.pop();
+        displayPerson(prev);
+      } else {
+        displayRoot();
+      }
+    }
+
+    // Fil d'Ariane
+    function updateBreadcrumb() {
+      if (currentPath.length <= 1) {
+        breadcrumbEl.style.display = "none";
+        mainHeader.style.display = "block";
+      } else {
+        mainHeader.style.display = "none";
+        breadcrumbEl.style.display = "block";
+        breadcrumbEl.innerHTML = "Enfants de ";
+        currentPath.forEach((p, i) => {
+          if (i > 0) {
+            breadcrumbEl.innerHTML += " ➜ " + p.name;
+          }
+        });
+      }
+    }
+
+    // Recherche
+    window.searchPerson = function() {
+      const q = document.getElementById("searchBox").value.toLowerCase();
+      if (!q || !family) {
+        displayRoot();
+        return;
+      }
+
+      const result = findPath(family, q);
+      if (result) {
+        history = result.slice(0, -1);
+        currentPath = result;
+        displayPerson(result[result.length - 1]);
+      }
+    };
+
+    function findPath(node, q, path = []) {
+      if (node.name.toLowerCase().includes(q)) {
+        return [...path, node];
+      }
+      if (!node.children) return null;
+      for (let child of node.children) {
+        let r = findPath(child, q, [...path, node]);
+        if (r) return r;
+      }
+      return null;
+    }
+
+    // Histoire - exposées globalement pour les onclick
+    window.openHistoryModal = function() {
+      document.getElementById("historyModal").classList.add("active");
+    };
+
+    window.closeHistoryModal = function() {
+      document.getElementById("historyModal").classList.remove("active");
+    };
+
+    window.goBack = goBack;
+
+    // Lancer le chargement
+    chargerFamille();
+  </script>
 </body>
 </html>
