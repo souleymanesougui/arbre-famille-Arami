@@ -2,75 +2,640 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
+  <meta name="google-site-verification" content="jlqlGzhp6tqTZ-sI6PCuMjZ7FtCsctml2RRX5JizTrM" />
+  <meta name="description" content="Gaway">
+  <meta name="robots" content="index, follow">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Souleymane Sougui Idriss">
+  <link rel="canonical" href="https://souleymanesougui.github.io/Gaway/">
   <title>Les fils Gaïda</title>
   
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-JMQ004JQ2L"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-JMQ004JQ2L');
+  </script>
+  
   <style>
-    /* ... vos styles existants ... */
-    
-    .loading {
+    :root {
+      --primary: #2C3E50;
+      --secondary: #34495E;
+      --accent: #8E44AD;
+      --light: #ECF0F1;
+      --dark: #2C3E50;
+      --background: linear-gradient(135deg, #F8F9FA, #E9ECEF, #F8F9FA);
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --shadow: 0 8px 32px rgba(44, 62, 80, 0.15);
+      --text-dark: #2C3E50;
+      --text-light: #7F8C8D;
+    }
+
+    * {
+      box-sizing: border-box;
+      transition: all 0.3s ease;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--background);
+      color: var(--text-dark);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding-bottom: 40px;
+      position: relative;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      width: 100%;
+      padding: 12px 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      position: relative;
+      min-height: 60px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .header-center {
+      flex: 1;
       text-align: center;
-      padding: 50px;
-      font-size: 18px;
-      color: #2C3E50;
+      font-size: clamp(16px, 4vw, 28px);
+      font-weight: 600;
+      letter-spacing: 1px;
+      color: var(--light);
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+      min-width: 120px;
     }
-    
-    .loader {
-      border: 4px solid #f3f3f3;
-      border-top: 4px solid #8E44AD;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      animation: spin 1s linear infinite;
-      margin: 0 auto 20px;
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
     }
-    
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    
-    .error-box {
-      background: #f8d7da;
-      border: 2px solid #f5c6cb;
-      border-radius: 10px;
-      padding: 20px;
-      margin: 20px;
-      text-align: center;
-      color: #721c24;
-    }
-    
-    .error-box h3 {
-      margin-top: 0;
-    }
-    
-    .error-box button {
-      background: #8E44AD;
+
+    .history-btn, .action-btn {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
       color: white;
-      border: none;
-      padding: 10px 25px;
-      border-radius: 5px;
+      padding: 6px 14px;
+      border-radius: 30px;
+      font-size: clamp(12px, 2vw, 14px);
       cursor: pointer;
-      font-size: 16px;
-      margin-top: 10px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-weight: 500;
+      backdrop-filter: blur(4px);
+      transition: all 0.3s ease;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 5px;
     }
-    
-    .error-box button:hover {
+
+    .history-btn:hover, .action-btn:hover {
+      background: rgba(255,255,255,0.3);
+      transform: translateY(-1px);
+    }
+
+    .action-btn.add-btn {
+      background: rgba(46, 204, 113, 0.3);
+      border-color: rgba(46, 204, 113, 0.5);
+    }
+
+    .action-btn.add-btn:hover {
+      background: rgba(46, 204, 113, 0.5);
+    }
+
+    .action-btn.edit-btn {
+      background: rgba(52, 152, 219, 0.3);
+      border-color: rgba(52, 152, 219, 0.5);
+    }
+
+    .action-btn.edit-btn:hover {
+      background: rgba(52, 152, 219, 0.5);
+    }
+
+    .action-btn.delete-btn {
+      background: rgba(231, 76, 60, 0.3);
+      border-color: rgba(231, 76, 60, 0.5);
+    }
+
+    .action-btn.delete-btn:hover {
+      background: rgba(231, 76, 60, 0.5);
+    }
+
+    #google_translate_element {
+      background: rgba(255,255,255,0.12);
+      border-radius: 30px;
+      padding: 3px 8px;
+      border: 1px solid rgba(255,255,255,0.2);
+      backdrop-filter: blur(4px);
+      display: inline-block;
+      min-width: 100px;
+    }
+
+    .breadcrumb {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      width: 100%;
+      padding: 12px 15px;
+      font-size: clamp(13px, 3vw, 16px);
+      color: var(--light);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      margin-bottom: 10px;
+      text-align: center;
+      word-wrap: break-word;
+      display: none;
+    }
+
+    .breadcrumb span {
+      margin: 0 6px;
+      color: #9b59b6;
+    }
+
+    .person-actions {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+
+    .person-actions button {
+      padding: 4px 12px;
+      border: none;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .person-actions .edit-action {
+      background: #3498db;
+      color: white;
+    }
+
+    .person-actions .edit-action:hover {
+      background: #2980b9;
+    }
+
+    .person-actions .delete-action {
+      background: #e74c3c;
+      color: white;
+    }
+
+    .person-actions .delete-action:hover {
+      background: #c0392b;
+    }
+
+    #searchBox {
+      margin: 15px 15px 10px;
+      padding: 12px 20px 12px 45px;
+      font-size: clamp(14px, 4vw, 16px);
+      width: 90%;
+      max-width: 500px;
+      border: none;
+      border-radius: 50px;
+      outline: none;
+      background-color: var(--card-bg);
+      color: var(--text-dark);
+      box-shadow: var(--shadow);
+      border: 2px solid var(--accent);
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="%238E44AD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>');
+      background-repeat: no-repeat;
+      background-size: 18px;
+      background-position: 18px center;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    #tree {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      padding: 15px;
+      max-width: 1400px;
+      width: 100%;
+    }
+
+    .person {
+      text-align: center;
+      cursor: pointer;
+      padding: 12px;
+      border-radius: 15px;
+      background: var(--card-bg);
+      box-shadow: var(--shadow);
+      transition: all 0.3s ease;
+      width: calc(50% - 20px);
+      min-width: 140px;
+      max-width: 200px;
+      position: relative;
+    }
+
+    .person:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(44, 62, 80, 0.2);
+    }
+
+    .person img {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 1;
+      max-width: 120px;
+      border-radius: 50%;
+      border: 4px solid var(--accent);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      transition: transform 0.3s;
+      object-fit: cover;
+      background: #ecf0f1;
+    }
+
+    .person:hover img {
+      transform: scale(1.05);
+      border-color: var(--secondary);
+    }
+
+    .person-name {
+      margin-top: 12px;
+      font-size: clamp(14px, 4vw, 16px);
+      font-weight: 600;
+      color: var(--text-dark);
+      padding: 6px 10px;
+      border-radius: 8px;
+      background: linear-gradient(to right, rgba(142, 68, 173, 0.1), rgba(52, 73, 94, 0.1));
+      word-wrap: break-word;
+      line-height: 1.3;
+    }
+
+    #backBtn {
+      margin: 10px 15px;
+      padding: 10px 25px;
+      font-size: clamp(14px, 4vw, 16px);
+      width: auto;
+      min-width: 140px;
+      border: none;
+      border-radius: 50px;
+      outline: none;
+      background: linear-gradient(135deg, var(--secondary), var(--accent));
+      color: white;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      display: none;
+    }
+
+    /* Modal Styles */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(6px);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 20px;
+      max-width: 600px;
+      width: 100%;
+      max-height: 80vh;
+      overflow-y: auto;
+      padding: 30px 25px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      position: relative;
+      animation: modalFadeIn 0.3s ease;
+    }
+
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: scale(0.95) translateY(20px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 12px;
+      right: 18px;
+      font-size: 28px;
+      cursor: pointer;
+      color: #999;
+      background: none;
+      border: none;
+      transition: color 0.3s;
+      line-height: 1;
+    }
+
+    .modal-close:hover {
+      color: #333;
+    }
+
+    .modal-content h2 {
+      color: var(--primary);
+      margin-top: 0;
+      border-bottom: 3px solid var(--accent);
+      padding-bottom: 12px;
+      font-size: 24px;
+    }
+
+    .modal-content p {
+      color: var(--text-dark);
+      line-height: 1.8;
+      font-size: 16px;
+      text-align: left;
+      padding: 0;
+      background: none;
+      box-shadow: none;
+      margin: 15px 0;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 10px 15px;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      font-size: 16px;
+      transition: border-color 0.3s;
+    }
+
+    .form-group input:focus {
+      border-color: var(--accent);
+      outline: none;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 25px;
+    }
+
+    .form-actions button {
+      padding: 10px 25px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .form-actions .btn-submit {
+      background: var(--accent);
+      color: white;
+    }
+
+    .form-actions .btn-submit:hover {
       background: #6c3483;
+      transform: translateY(-2px);
+    }
+
+    .form-actions .btn-cancel {
+      background: #e74c3c;
+      color: white;
+    }
+
+    .form-actions .btn-cancel:hover {
+      background: #c0392b;
+      transform: translateY(-2px);
+    }
+
+    .form-actions .btn-delete-confirm {
+      background: #e74c3c;
+      color: white;
+    }
+
+    .form-actions .btn-delete-confirm:hover {
+      background: #c0392b;
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 480px) {
+      .person {
+        width: calc(50% - 10px);
+        padding: 10px;
+      }
+      
+      .person img {
+        max-width: 100px;
+      }
+      
+      #searchBox {
+        width: 95%;
+        margin: 12px 10px 8px;
+        padding: 10px 14px 10px 40px;
+      }
+
+      header {
+        padding: 8px 12px;
+        min-height: 50px;
+        flex-wrap: wrap;
+      }
+
+      .header-center {
+        font-size: clamp(14px, 3.5vw, 20px);
+        order: 2;
+        flex: 0 0 100%;
+        text-align: center;
+        margin: 4px 0;
+      }
+
+      .header-left, .header-right {
+        order: 1;
+      }
+
+      .header-right {
+        order: 3;
+      }
+
+      .history-btn, .action-btn {
+        padding: 4px 10px;
+        font-size: 11px;
+      }
+
+      #google_translate_element {
+        min-width: 80px;
+        padding: 2px 6px;
+      }
+
+      #tree {
+        gap: 15px;
+        padding: 10px;
+      }
+
+      .modal-content {
+        padding: 20px 15px;
+        max-height: 85vh;
+      }
+    }
+
+    @media (max-width: 320px) {
+      .person {
+        width: 100%;
+        max-width: 150px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      header {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .header-center {
+        font-size: clamp(12px, 3vw, 16px);
+        order: 2;
+        flex: 0 0 100%;
+      }
+      .header-left, .header-right {
+        order: 1;
+      }
+      .header-right {
+        order: 3;
+      }
     }
   </style>
 </head>
 <body>
-  <!-- Votre header existant -->
-  
-  <div id="tree">
-    <div class="loading">
-      <div class="loader"></div>
-      <p>⏳ Chargement des données...</p>
+  <header>
+    <div class="header-left">
+      <button class="history-btn" onclick="openHistoryModal()">📖 Histoire</button>
+      <button class="action-btn add-btn" onclick="openAddModal()">➕ Ajouter</button>
+    </div>
+    <div class="header-center" id="mainHeader">🌳 Les fils Gaïda</div>
+    <div class="header-right">
+      <button class="action-btn edit-btn" onclick="openEditModal()" id="editBtn" style="display:none;">✏️ Modifier</button>
+      <button class="action-btn delete-btn" onclick="openDeleteModal()" id="deleteBtn" style="display:none;">🗑️ Supprimer</button>
+      <div id="google_translate_element"></div>
+    </div>
+  </header>
+
+  <div id="breadcrumb" class="breadcrumb"></div>
+
+  <input id="searchBox" type="text" placeholder="Rechercher un nom..." oninput="searchPerson()">
+  <button id="backBtn" onclick="goBack()">⬅ Retour à l'accueil</button>
+  <div id="tree"></div>
+
+  <!-- History Modal -->
+  <div class="modal-overlay" id="historyModal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeHistoryModal()">&times;</button>
+      <h2>📖 L'histoire des fils Gaïda</h2>
+      <p>
+        La lignée des <strong>fils Gaïda</strong> est une famille dont les racines plongent 
+        au cœur des traditions et de l'histoire. Ce site a été créé pour préserver la mémoire 
+        et l'arbre généalogique de cette famille, afin que chaque génération puisse connaître 
+        ses origines et son héritage.
+      </p>
+      <p>
+        Chaque nom sur cet arbre est une branche, un lien qui relie le passé au présent. 
+        Nous vous invitons à explorer cet héritage familial et à contribuer à sa transmission 
+        aux générations futures.
+      </p>
+      <p style="font-style: italic; color: var(--accent);">
+        — Que la mémoire de nos ancêtres vive à travers nous.
+      </p>
     </div>
   </div>
-  
-  <!-- Le reste de votre HTML -->
+
+  <!-- Add Person Modal -->
+  <div class="modal-overlay" id="addModal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeAddModal()">&times;</button>
+      <h2>➕ Ajouter une personne</h2>
+      <form id="addForm" onsubmit="addPerson(event)">
+        <div class="form-group">
+          <label for="addName">Nom complet *</label>
+          <input type="text" id="addName" required placeholder="Entrez le nom complet">
+        </div>
+        <div class="form-group">
+          <label for="addPhoto">Nom de la photo (ex: nom.jpg)</label>
+          <input type="text" id="addPhoto" placeholder="nom_de_la_photo.jpg">
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn-cancel" onclick="closeAddModal()">Annuler</button>
+          <button type="submit" class="btn-submit">Ajouter</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Edit Person Modal -->
+  <div class="modal-overlay" id="editModal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeEditModal()">&times;</button>
+      <h2>✏️ Modifier une personne</h2>
+      <form id="editForm" onsubmit="editPerson(event)">
+        <div class="form-group">
+          <label for="editName">Nom complet *</label>
+          <input type="text" id="editName" required placeholder="Entrez le nom complet">
+        </div>
+        <div class="form-group">
+          <label for="editPhoto">Nom de la photo (ex: nom.jpg)</label>
+          <input type="text" id="editPhoto" placeholder="nom_de_la_photo.jpg">
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn-cancel" onclick="closeEditModal()">Annuler</button>
+          <button type="submit" class="btn-submit">Modifier</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Delete Person Modal -->
+  <div class="modal-overlay" id="deleteModal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeDeleteModal()">&times;</button>
+      <h2>🗑️ Supprimer une personne</h2>
+      <p style="text-align: center; font-size: 18px; color: #e74c3c;">
+        ⚠️ Êtes-vous sûr de vouloir supprimer <strong id="deleteName"></strong> ?
+      </p>
+      <p style="text-align: center; font-size: 14px; color: #7f8c8d;">
+        Cette action est irréversible et supprimera également tous les descendants.
+      </p>
+      <div class="form-actions" style="justify-content: center;">
+        <button type="button" class="btn-cancel" onclick="closeDeleteModal()">Annuler</button>
+        <button type="button" class="btn-delete-confirm" onclick="confirmDelete()">🗑️ Supprimer</button>
+      </div>
+    </div>
+  </div>
 
   <script type="importmap">
     {
@@ -87,10 +652,10 @@
       getFirestore, 
       doc, 
       getDoc, 
-      setDoc,
-      collection,
-      query,
-      getDocs
+      updateDoc,
+      deleteDoc,
+      arrayUnion,
+      arrayRemove
     } from "firebase/firestore";
 
     // Configuration Firebase
@@ -103,21 +668,14 @@
       appId: "1:1061998444067:web:4979bcd90e56f42fd4bb96"
     };
 
-    // Initialisation avec vérification
-    let app, db;
-    try {
-      app = initializeApp(firebaseConfig);
-      db = getFirestore(app);
-      console.log("✅ Firebase initialisé avec succès");
-    } catch (error) {
-      console.error("❌ Erreur d'initialisation Firebase:", error);
-      showError("Erreur d'initialisation de Firebase. Vérifiez votre configuration.");
-    }
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
     let family = null;
     let history = [];
     let currentPath = [];
     let currentNode = null;
+    let currentParent = null;
 
     const treeEl = document.getElementById('tree');
     const backBtn = document.getElementById('backBtn');
@@ -126,150 +684,78 @@
     const editBtn = document.getElementById('editBtn');
     const deleteBtn = document.getElementById('deleteBtn');
 
-    // ===== AFFICHER LES ERREURS =====
-    function showError(message, details = '') {
-      treeEl.innerHTML = `
-        <div class="error-box">
-          <h3>❌ ${message}</h3>
-          ${details ? `<p style="font-size:14px;color:#721c24;">${details}</p>` : ''}
-          <button onclick="location.reload()">🔄 Réessayer</button>
-          <p style="font-size:12px;margin-top:15px;color:#721c24;">
-            Vérifiez que vous êtes connecté à Internet<br>
-            et que les règles Firebase autorisent l'accès
-          </p>
-        </div>
-      `;
-    }
-
-    // ===== GÉNÉRATEUR D'ID UNIQUE =====
-    function generateId() {
-      return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
-    }
-
-    // ===== CHARGER LA FAMILLE AVEC PLUS DE VÉRIFICATIONS =====
+    // Charger la famille depuis Firebase
     async function chargerfamille() {
-      if (!db) {
-        showError("Firebase non initialisé");
-        return;
-      }
-
       try {
-        console.log("🔍 Tentative de chargement des données...");
         const ref = doc(db, "famille", "bollou_oumar");
         const resultat = await getDoc(ref);
 
-        console.log("📄 Résultat du chargement:", resultat.exists() ? "Document trouvé" : "Document inexistant");
-
         if (resultat.exists()) {
           family = resultat.data();
-          console.log("✅ Données chargées:", family);
-          
-          // S'assurer que chaque personne a un ID
-          const ensureIds = (node) => {
-            if (!node.id) node.id = generateId();
-            if (node.children) {
-              node.children.forEach(child => ensureIds(child));
-            }
-          };
-          ensureIds(family);
-          
           currentPath = [family];
           displayRoot();
-          showNotification('✅ Données chargées avec succès', 'success');
         } else {
-          // Créer le document s'il n'existe pas
-          console.log("📝 Création d'un nouveau document...");
-          family = {
-            id: generateId(),
-            name: "Gaïda",
-            photo: "",
-            children: []
-          };
-          
-          await setDoc(ref, family);
-          console.log("✅ Document créé avec succès");
-          
-          currentPath = [family];
-          displayRoot();
-          showNotification('📝 Nouvelle famille créée', 'success');
+          treeEl.innerHTML = "<p>Aucune donnée trouvée.</p>";
         }
       } catch (error) {
-        console.error("❌ Erreur détaillée:", error);
-        
-        // Afficher des informations plus précises sur l'erreur
-        let errorMessage = "Erreur lors du chargement des données";
-        let errorDetails = "";
-        
-        if (error.code === "permission-denied") {
-          errorMessage = "⛔ Accès refusé par Firebase";
-          errorDetails = "Vérifiez les règles de sécurité dans la console Firebase. Elles doivent autoriser la lecture et l'écriture.";
-        } else if (error.code === "unavailable") {
-          errorMessage = "🌐 Service Firebase indisponible";
-          errorDetails = "Vérifiez votre connexion Internet et réessayez.";
-        } else if (error.code === "not-found") {
-          errorMessage = "📁 Document non trouvé";
-          errorDetails = "Le document 'bollou_oumar' n'existe pas dans la collection 'famille'.";
-        } else {
-          errorDetails = error.message || "Erreur inconnue";
-        }
-        
-        showError(errorMessage, errorDetails);
+        console.error("Erreur de chargement :", error);
+        treeEl.innerHTML = "<p>Erreur lors du chargement des données.</p>";
       }
     }
 
-    // ===== NOTIFICATIONS =====
-    function showNotification(message, type = 'success') {
-      const existing = document.querySelector('.notification');
-      if (existing) existing.remove();
-
-      const notif = document.createElement('div');
-      notif.className = `notification ${type}`;
-      notif.textContent = message;
-      document.body.appendChild(notif);
-
-      setTimeout(() => {
-        notif.style.opacity = '0';
-        notif.style.transform = 'translateX(100%)';
-        setTimeout(() => notif.remove(), 300);
-      }, 3000);
-    }
-
-    // ===== SAUVEGARDER LA FAMILLE =====
+    // Sauvegarder la famille dans Firebase
     async function sauvegarderFamille() {
       try {
         const ref = doc(db, "famille", "bollou_oumar");
-        await setDoc(ref, family);
-        console.log("✅ Sauvegarde réussie");
-        showNotification('✅ Données sauvegardées avec succès', 'success');
+        await updateDoc(ref, {
+          name: family.name,
+          children: family.children || [],
+          photo: family.photo || ""
+        });
+        console.log("Données sauvegardées avec succès !");
         return true;
-      } catch(error) {
-        console.error("❌ Erreur sauvegarde:", error);
-        showNotification('❌ Erreur lors de la sauvegarde: ' + error.message, 'error');
+      } catch (error) {
+        console.error("Erreur lors de la sauvegarde :", error);
+        alert("Erreur lors de la sauvegarde des données.");
         return false;
       }
     }
 
-    // ===== TROUVER UN NOEUD AVEC SON ID =====
-    function findNodeById(node, targetId, parent = null) {
-      if (node.id === targetId) {
+    // Trouver un noeud dans l'arbre avec son parent
+    function findNodeWithParent(node, targetName, parent = null) {
+      if (node.name === targetName) {
         return { node, parent };
       }
       if (!node.children) return null;
       for (let child of node.children) {
-        const result = findNodeById(child, targetId, node);
+        const result = findNodeWithParent(child, targetName, node);
         if (result) return result;
       }
       return null;
     }
 
-    // ===== AFFICHER UNE PERSONNE =====
+    // Trouver le chemin vers un noeud
+    function findPathToNode(node, targetName, path = []) {
+      if (node.name === targetName) {
+        return [...path, node];
+      }
+      if (!node.children) return null;
+      for (let child of node.children) {
+        const result = findPathToNode(child, targetName, [...path, node]);
+        if (result) return result;
+      }
+      return null;
+    }
+
+    // Afficher une personne
     function displayPerson(person) {
       treeEl.innerHTML = "";
       currentNode = person;
       backBtn.style.display = history.length ? "inline-block" : "none";
       updateBreadcrumb();
 
-      if (person && person.id !== family.id) {
+      // Afficher les boutons d'action pour la personne courante
+      if (person && person !== family) {
         editBtn.style.display = "inline-block";
         deleteBtn.style.display = "inline-block";
       } else {
@@ -278,11 +764,12 @@
       }
 
       if (!person.children || person.children.length === 0) {
-        treeEl.innerHTML = "<p style='text-align:center;padding:40px;'>👶 La liste des enfants n'est pas encore complète.</p>";
+        treeEl.innerHTML = "<p>La liste des enfants n'est pas encore complète.</p>";
         return;
       }
 
-      const searchQuery = document.getElementById('searchBox').value.toLowerCase();
+      // Filtrer si recherche active
+      const searchQuery = document.getElementById("searchBox").value.toLowerCase();
       let childrenToShow = person.children;
       if (searchQuery) {
         childrenToShow = person.children.filter(child => 
@@ -315,7 +802,7 @@
       });
     }
 
-    // ===== ACCUEIL =====
+    // Accueil
     function displayRoot() {
       treeEl.innerHTML = "";
       history = [];
@@ -350,7 +837,7 @@
       treeEl.appendChild(div);
     }
 
-    // ===== RETOUR =====
+    // Retour
     window.goBack = function() {
       if (history.length) {
         const prev = history.pop();
@@ -361,7 +848,7 @@
       }
     };
 
-    // ===== FIL D'ARIANE =====
+    // Fil d'Ariane
     function updateBreadcrumb() {
       if (currentPath.length <= 1) {
         breadcrumbEl.style.display = "none";
@@ -378,9 +865,9 @@
       }
     }
 
-    // ===== RECHERCHE =====
+    // Recherche
     window.searchPerson = function() {
-      const q = document.getElementById('searchBox').value.toLowerCase();
+      const q = document.getElementById("searchBox").value.toLowerCase();
       if (!q || !family) {
         if (currentNode) {
           displayPerson(currentNode);
@@ -390,36 +877,32 @@
         return;
       }
 
-      const result = findPathToNodeByName(family, q);
+      // Chercher dans tout l'arbre
+      const result = findPathToNode(family, q);
       if (result) {
         history = result.slice(0, -1);
         currentPath = result;
         displayPerson(result[result.length - 1]);
       } else {
+        // Si on est dans une sous-branche, chercher aussi localement
+        if (currentNode && currentNode !== family) {
+          const localResult = findPathToNode(currentNode, q);
+          if (localResult) {
+            history = [...history.slice(0, -1), ...localResult.slice(0, -1)];
+            currentPath = [...currentPath.slice(0, -1), ...localResult];
+            displayPerson(localResult[localResult.length - 1]);
+            return;
+          }
+        }
+        // Sinon, afficher le noeud actuel avec tous ses enfants
         if (currentNode) {
           displayPerson(currentNode);
         }
       }
     };
 
-    function findPathToNodeByName(node, searchName, path = []) {
-      if (node.name.toLowerCase().includes(searchName)) {
-        return [...path, node];
-      }
-      if (!node.children) return null;
-      for (let child of node.children) {
-        const result = findPathToNodeByName(child, searchName, [...path, node]);
-        if (result) return result;
-      }
-      return null;
-    }
-
-    // ===== AJOUTER =====
+    // ===== AJOUTER UNE PERSONNE =====
     window.openAddModal = function() {
-      if (!currentNode) {
-        showNotification('❌ Veuillez sélectionner une personne d\'abord', 'error');
-        return;
-      }
       document.getElementById("addModal").classList.add("active");
       document.getElementById("addName").value = "";
       document.getElementById("addPhoto").value = "";
@@ -435,22 +918,22 @@
       const photo = document.getElementById("addPhoto").value.trim();
 
       if (!name) {
-        showNotification('❌ Veuillez entrer un nom', 'error');
+        alert("Veuillez entrer un nom.");
         return;
       }
 
       if (!currentNode) {
-        showNotification('❌ Aucun noeud sélectionné', 'error');
+        alert("Aucun noeud sélectionné.");
         return;
       }
 
+      // Vérifier si le nom existe déjà
       if (currentNode.children && currentNode.children.some(c => c.name === name)) {
-        showNotification(`❌ "${name}" existe déjà dans cette liste`, 'warning');
+        alert(`"${name}" existe déjà dans cette liste.`);
         return;
       }
 
       const newPerson = {
-        id: generateId(),
         name: name,
         photo: photo || "",
         children: []
@@ -464,26 +947,28 @@
       const saved = await sauvegarderFamille();
       if (saved) {
         closeAddModal();
-        if (currentNode.id === family.id) {
+        // Recharger l'affichage
+        if (currentNode === family) {
           displayRoot();
         } else {
           displayPerson(currentNode);
         }
-        showNotification(`✅ "${name}" a été ajouté avec succès !`, 'success');
+        alert(`✅ "${name}" a été ajouté avec succès !`);
       }
     };
 
-    // ===== MODIFIER =====
+    // ===== MODIFIER UNE PERSONNE =====
     let editingPerson = null;
     let editingParent = null;
 
     window.openEditModal = function() {
-      if (!currentNode || currentNode.id === family.id) {
-        showNotification('❌ Sélectionnez une personne à modifier', 'warning');
+      if (!currentNode || currentNode === family) {
+        alert("Sélectionnez une personne à modifier.");
         return;
       }
 
-      const result = findNodeById(family, currentNode.id);
+      // Trouver le parent du noeud courant
+      const result = findNodeWithParent(family, currentNode.name);
       if (result) {
         editingPerson = result.node;
         editingParent = result.parent;
@@ -491,7 +976,7 @@
         document.getElementById("editPhoto").value = editingPerson.photo || "";
         document.getElementById("editModal").classList.add("active");
       } else {
-        showNotification('❌ Personne non trouvée', 'error');
+        alert("Erreur : personne non trouvée dans l'arbre.");
       }
     };
 
@@ -507,60 +992,65 @@
       const photo = document.getElementById("editPhoto").value.trim();
 
       if (!name) {
-        showNotification('❌ Veuillez entrer un nom', 'error');
+        alert("Veuillez entrer un nom.");
         return;
       }
 
       if (!editingPerson) {
-        showNotification('❌ Erreur : aucune personne à modifier', 'error');
+        alert("Erreur : aucune personne à modifier.");
         return;
       }
 
+      // Vérifier si le nouveau nom existe déjà (sauf si c'est le même)
       if (name !== editingPerson.name && editingParent && editingParent.children) {
-        if (editingParent.children.some(c => c.name === name && c.id !== editingPerson.id)) {
-          showNotification(`❌ "${name}" existe déjà dans cette liste`, 'warning');
+        if (editingParent.children.some(c => c.name === name && c !== editingPerson)) {
+          alert(`"${name}" existe déjà dans cette liste.`);
           return;
         }
       }
 
+      // Mettre à jour les données
       const oldName = editingPerson.name;
       editingPerson.name = name;
       editingPerson.photo = photo || "";
 
-      if (oldName !== name && currentNode && currentNode.id === editingPerson.id) {
+      // Si le nom a changé, mettre à jour currentPath
+      if (oldName !== name && currentNode === editingPerson) {
         currentNode.name = name;
       }
 
       const saved = await sauvegarderFamille();
       if (saved) {
         closeEditModal();
-        if (currentNode && currentNode.id === editingPerson.id) {
+        // Recharger l'affichage
+        if (currentNode === editingPerson || currentNode.name === name) {
           displayPerson(editingPerson);
         } else {
           displayPerson(currentNode);
         }
-        showNotification(`✅ "${oldName}" modifié en "${name}"`, 'success');
+        alert(`✅ "${oldName}" a été modifié en "${name}" avec succès !`);
       }
     };
 
-    // ===== SUPPRIMER =====
+    // ===== SUPPRIMER UNE PERSONNE =====
     let deletingPerson = null;
     let deletingParent = null;
 
     window.openDeleteModal = function() {
-      if (!currentNode || currentNode.id === family.id) {
-        showNotification('❌ Sélectionnez une personne à supprimer', 'warning');
+      if (!currentNode || currentNode === family) {
+        alert("Sélectionnez une personne à supprimer.");
         return;
       }
 
-      const result = findNodeById(family, currentNode.id);
+      // Trouver le parent du noeud courant
+      const result = findNodeWithParent(family, currentNode.name);
       if (result) {
         deletingPerson = result.node;
         deletingParent = result.parent;
         document.getElementById("deleteName").textContent = deletingPerson.name;
         document.getElementById("deleteModal").classList.add("active");
       } else {
-        showNotification('❌ Personne non trouvée', 'error');
+        alert("Erreur : personne non trouvée dans l'arbre.");
       }
     };
 
@@ -572,45 +1062,35 @@
 
     window.confirmDelete = async function() {
       if (!deletingPerson || !deletingParent) {
-        showNotification('❌ Erreur : aucune personne à supprimer', 'error');
+        alert("Erreur : aucune personne à supprimer.");
         return;
       }
 
       const nameToDelete = deletingPerson.name;
 
+      // Supprimer de la liste des enfants du parent
       if (deletingParent.children) {
         deletingParent.children = deletingParent.children.filter(
-          child => child.id !== deletingPerson.id
+          child => child !== deletingPerson
         );
       }
 
       const saved = await sauvegarderFamille();
       if (saved) {
         closeDeleteModal();
+        // Réinitialiser currentPath
         currentPath = [family];
-        
-        const parentCheck = findNodeById(family, deletingParent.id);
-        if (parentCheck) {
-          currentPath = findPathToNodeById(family, deletingParent.id) || [family];
-          displayPerson(parentCheck.node);
+        // Trouver le nouveau chemin
+        const newPath = findPathToNode(family, deletingParent.name);
+        if (newPath) {
+          currentPath = newPath;
+          displayPerson(deletingParent);
         } else {
           displayRoot();
         }
-        showNotification(`🗑️ "${nameToDelete}" a été supprimé !`, 'success');
+        alert(`🗑️ "${nameToDelete}" a été supprimé avec succès !`);
       }
     };
-
-    function findPathToNodeById(node, targetId, path = []) {
-      if (node.id === targetId) {
-        return [...path, node];
-      }
-      if (!node.children) return null;
-      for (let child of node.children) {
-        const result = findPathToNodeById(child, targetId, [...path, node]);
-        if (result) return result;
-      }
-      return null;
-    }
 
     // ===== HISTOIRE =====
     window.openHistoryModal = function() {
@@ -621,11 +1101,13 @@
       document.getElementById("historyModal").classList.remove("active");
     };
 
-    // ===== LANCER LE CHARGEMENT =====
+    // Lancer le chargement
     chargerfamille();
 
-    // ===== EXPOSER LES FONCTIONS =====
-    window.findNodeById = findNodeById;
+    // Exposer les fonctions pour les onclick
+    window.findNodeWithParent = findNodeWithParent;
+    window.findPathToNode = findPathToNode;
+    window.currentNode = () => currentNode;
   </script>
 </body>
 </html>
