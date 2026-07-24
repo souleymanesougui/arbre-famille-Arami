@@ -550,9 +550,9 @@
     const mainHeader = document.getElementById('mainHeader');
 
     // Charger la famille depuis Firebase
-    async function chargerFamille() {
+    async function chargerfamille() {
       try {
-        const ref = doc(db, "Famille", "bollou_oumar");
+        const ref = doc(db, "famille", "bollou_oumar");
         const resultat = await getDoc(ref);
 
         if (resultat.exists()) {
