@@ -180,9 +180,14 @@
       color: #2ecc71;
     }
 
-    .auth-status.user {
+    .auth-status.editor {
       background: rgba(52, 152, 219, 0.3);
       color: #3498db;
+    }
+
+    .auth-status.viewer {
+      background: rgba(149, 165, 166, 0.3);
+      color: #bdc3c7;
     }
 
     .user-avatar {
@@ -494,6 +499,34 @@
       justify-content: center;
     }
 
+    .permission-info {
+      background: #f8f9fa;
+      border-radius: 10px;
+      padding: 15px;
+      margin-top: 15px;
+      text-align: left;
+    }
+
+    .permission-info h3 {
+      margin: 0 0 10px 0;
+      color: var(--primary);
+      font-size: 16px;
+    }
+
+    .permission-info ul {
+      margin: 5px 0;
+      padding-left: 20px;
+    }
+
+    .permission-info ul li {
+      margin: 5px 0;
+      font-size: 14px;
+    }
+
+    .permission-info .role-admin { color: #27ae60; font-weight: 600; }
+    .permission-info .role-editor { color: #3498db; font-weight: 600; }
+    .permission-info .role-viewer { color: #95a5a6; font-weight: 600; }
+
     @media (max-width: 480px) {
       .person {
         width: calc(50% - 10px);
@@ -595,6 +628,7 @@
     <div class="header-left">
       <button class="history-btn" onclick="openHistoryModal()">📖 Histoire</button>
       <button class="action-btn add-btn" onclick="openAddModal()" id="addBtn" style="display:none;">➕ Ajouter</button>
+      <button class="action-btn" onclick="openPermissionsModal()" id="permissionsBtn" style="display:none;">👥 Gérer</button>
     </div>
     <div class="header-center" id="mainHeader">🌳 Les fils Gaïda</div>
     <div class="header-right">
@@ -657,10 +691,52 @@
              data-size="large"
              data-logo_alignment="left">
         </div>
-        <div class="auth-error" id="authError">❌ Accès non autorisé. Contactez l'administrateur.</div>
-        <p style="margin-top: 15px; font-size: 13px; color: var(--text-light);">
-          Seuls les utilisateurs autorisés peuvent modifier les données.
-        </p>
+        <div class="auth-error" id="authError">❌ Erreur de connexion</div>
+        <div class="permission-info">
+          <h3>📋 Vos permissions seront :</h3>
+          <ul>
+            <li><span class="role-admin">👑 Administrateur</span> : Tout faire (ajouter, modifier, supprimer, gérer les permissions)</li>
+            <li><span class="role-editor">✏️ Éditeur</span> : Ajouter et modifier (pas de suppression)</li>
+            <li><span class="role-viewer">👀 Visiteur</span> : Visualiser uniquement</li>
+          </ul>
+          <p style="font-size: 13px; color: var(--text-light); margin-top: 10px;">
+            ⚠️ Les permissions sont gérées par l'administrateur dans la base de données.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Permissions Management Modal (Admin only) -->
+  <div class="modal-overlay" id="permissionsModal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closePermissionsModal()">&times;</button>
+      <h2>👥 Gestion des permissions</h2>
+      <p style="color: var(--text-light); margin-bottom: 20px;">
+        Ajoutez ou retirez des emails pour leur donner des permissions.
+      </p>
+      <div id="permissionsList">
+        <p style="text-align: center; color: var(--text-light);">Chargement des permissions...</p>
+      </div>
+      <div style="margin-top: 20px; border-top: 2px solid #eee; padding-top: 20px;">
+        <h3 style="margin-bottom: 15px;">Ajouter un utilisateur</h3>
+        <div class="form-group">
+          <label for="permissionEmail">Email</label>
+          <input type="email" id="permissionEmail" placeholder="exemple@gmail.com">
+        </div>
+        <div class="form-group">
+          <label for="permissionRole">Rôle</label>
+          <select id="permissionRole" style="width: 100%; padding: 10px 15px; border: 2px solid #ddd; border-radius: 10px; font-size: 16px;">
+            <option value="editor">✏️ Éditeur (ajouter/modifier)</option>
+            <option value="viewer">👀 Visiteur (visualiser seulement)</option>
+          </select>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn-submit" onclick="addPermission()">➕ Ajouter</button>
+        </div>
+      </div>
+      <div class="form-actions" style="margin-top: 10px;">
+        <button type="button" class="btn-cancel" onclick="closePermissionsModal()">Fermer</button>
       </div>
     </div>
   </div>
@@ -744,10 +820,12 @@
       getFirestore, 
       doc, 
       getDoc, 
+      setDoc,
       updateDoc,
       deleteDoc,
-      arrayUnion,
-      arrayRemove
+      collection,
+      query,
+      getDocs
     } from "firebase/firestore";
 
     // Configuration Firebase
@@ -763,20 +841,78 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
+    // ===== GESTION DES PERMISSIONS DANS FIRESTORE =====
+    // Collection: permissions
+    // Document: par email (ex: "souguisouleymane7@gmail.com")
+    // Champ: role (admin, editor, viewer)
+
+    // Votre email administrateur (celui qui peut gérer les permissions)
+    const ADMIN_EMAIL = "souguisouleymane7@gmail.com";
+
+    let currentUser = null; // { email, role, name, picture }
+
+    // Fonction pour charger les permissions d'un utilisateur
+    async function getUserRole(email) {
+      try {
+        const docRef = doc(db, "permissions", email);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          return docSnap.data().role || "viewer";
+        }
+        // Si l'email n'est pas dans la base, c'est un viewer par défaut
+        return "viewer";
+      } catch (error) {
+        console.error("Erreur lors du chargement des permissions:", error);
+        return "viewer";
+      }
+    }
+
+    // Fonction pour définir les permissions d'un utilisateur (admin uniquement)
+    async function setUserRole(email, role) {
+      try {
+        await setDoc(doc(db, "permissions", email), { role: role });
+        return true;
+      } catch (error) {
+        console.error("Erreur lors de la mise à jour des permissions:", error);
+        alert("Erreur lors de la mise à jour des permissions.");
+        return false;
+      }
+    }
+
+    // Fonction pour supprimer les permissions d'un utilisateur (admin uniquement)
+    async function removeUserRole(email) {
+      try {
+        if (email === ADMIN_EMAIL) {
+          alert("❌ Vous ne pouvez pas retirer vos propres permissions d'administrateur.");
+          return false;
+        }
+        await deleteDoc(doc(db, "permissions", email));
+        return true;
+      } catch (error) {
+        console.error("Erreur lors de la suppression des permissions:", error);
+        alert("Erreur lors de la suppression des permissions.");
+        return false;
+      }
+    }
+
+    // Fonction pour charger toutes les permissions (admin uniquement)
+    async function loadAllPermissions() {
+      try {
+        const q = query(collection(db, "permissions"));
+        const querySnapshot = await getDocs(q);
+        const permissions = {};
+        querySnapshot.forEach((doc) => {
+          permissions[doc.id] = doc.data().role;
+        });
+        return permissions;
+      } catch (error) {
+        console.error("Erreur lors du chargement des permissions:", error);
+        return {};
+      }
+    }
+
     // ===== GESTION DE L'AUTHENTIFICATION GOOGLE =====
-    // Liste des emails autorisés
-    // Ajoutez ici les emails des personnes autorisées
-    const authorizedEmails = {
-       "souguisouleymane7@gmail.com": "admin",
-      // "votre.email@gmail.com": "admin",  // Décommentez et ajoutez votre email
-      // "ami@exemple.com": "user"
-    };
-
-    let currentUser = null; // { email: string, role: 'admin' | 'user', name: string, picture: string }
-
-    // Fonction pour gérer la connexion Google
     window.handleGoogleLogin = function() {
-      // La fenêtre modale s'ouvre, le bouton Google est déjà chargé
       document.getElementById("authModal").classList.add("active");
     };
 
@@ -785,37 +921,45 @@
     };
 
     // Fonction appelée par le SDK Google après authentification
-    window.onGoogleSignIn = function(response) {
-      // Décoder le token JWT pour obtenir les infos utilisateur
+    window.onGoogleSignIn = async function(response) {
       try {
         const payload = parseJwt(response.credential);
         const email = payload.email;
         const name = payload.name;
         const picture = payload.picture;
 
-        // Vérifier si l'email est autorisé
-        if (authorizedEmails[email]) {
-          currentUser = {
-            email: email,
-            role: authorizedEmails[email],
-            name: name,
-            picture: picture
-          };
-          closeAuthModal();
-          updateUIForAuth();
-          alert(`✅ Bienvenue ${name} ! Connecté en tant que ${currentUser.role === 'admin' ? 'Administrateur' : 'Utilisateur'}`);
-        } else {
-          // Email non autorisé
-          document.getElementById("authError").classList.add("show");
-          setTimeout(() => {
-            document.getElementById("authError").classList.remove("show");
-          }, 5000);
-          // Déconnecter l'utilisateur de Google
-          google.accounts.id.disableAutoSelect();
+        // Charger le rôle de l'utilisateur depuis Firestore
+        const role = await getUserRole(email);
+        
+        currentUser = {
+          email: email,
+          role: role,
+          name: name,
+          picture: picture
+        };
+
+        closeAuthModal();
+        updateUIForAuth();
+        
+        const roleText = {
+          'admin': 'Administrateur 👑',
+          'editor': 'Éditeur ✏️',
+          'viewer': 'Visiteur 👀'
+        }[role] || 'Visiteur 👀';
+        
+        alert(`✅ Bienvenue ${name} ! Rôle : ${roleText}`);
+        
+        // Recharger l'arbre pour mettre à jour les boutons
+        if (currentNode) {
+          displayPerson(currentNode);
         }
       } catch (e) {
         console.error("Erreur de décodage du token:", e);
-        alert("Erreur lors de la connexion. Veuillez réessayer.");
+        document.getElementById("authError").textContent = "❌ Erreur de connexion. Veuillez réessayer.";
+        document.getElementById("authError").classList.add("show");
+        setTimeout(() => {
+          document.getElementById("authError").classList.remove("show");
+        }, 5000);
       }
     };
 
@@ -848,18 +992,123 @@
       }
       currentUser = null;
       updateUIForAuth();
+      // Recharger l'arbre
+      if (currentNode) {
+        displayPerson(currentNode);
+      }
       alert("🔒 Déconnecté avec succès.");
     };
 
+    // ===== GESTION DES PERMISSIONS (Admin) =====
+    window.openPermissionsModal = async function() {
+      if (!currentUser || currentUser.role !== 'admin') {
+        alert("🔒 Seul l'administrateur peut gérer les permissions.");
+        return;
+      }
+      
+      document.getElementById("permissionsModal").classList.add("active");
+      await loadPermissionsList();
+    };
+
+    window.closePermissionsModal = function() {
+      document.getElementById("permissionsModal").classList.remove("active");
+    };
+
+    async function loadPermissionsList() {
+      const container = document.getElementById("permissionsList");
+      const permissions = await loadAllPermissions();
+      
+      if (Object.keys(permissions).length === 0) {
+        container.innerHTML = `<p style="text-align: center; color: var(--text-light);">Aucun utilisateur autorisé pour le moment.</p>`;
+        return;
+      }
+      
+      let html = `<div style="margin-bottom: 15px; font-weight: 600; color: var(--primary);">📋 Utilisateurs autorisés :</div>`;
+      html += `<ul style="list-style: none; padding: 0;">`;
+      
+      for (const [email, role] of Object.entries(permissions)) {
+        const roleLabel = {
+          'admin': '👑 Administrateur',
+          'editor': '✏️ Éditeur',
+          'viewer': '👀 Visiteur'
+        }[role] || '👀 Visiteur';
+        
+        const isAdmin = email === ADMIN_EMAIL;
+        const deleteButton = isAdmin ? 
+          '<span style="color: #999; font-size: 12px;">(Vous)</span>' :
+          `<button onclick="removeUser('${email}')" style="background: #e74c3c; color: white; border: none; border-radius: 5px; padding: 2px 10px; cursor: pointer; font-size: 12px;">❌ Retirer</button>`;
+        
+        html += `
+          <li style="display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; border-bottom: 1px solid #eee;">
+            <span><strong>${email}</strong> - ${roleLabel}</span>
+            <span>${deleteButton}</span>
+          </li>
+        `;
+      }
+      
+      html += `</ul>`;
+      container.innerHTML = html;
+    }
+
+    window.addPermission = async function() {
+      if (!currentUser || currentUser.role !== 'admin') {
+        alert("🔒 Seul l'administrateur peut ajouter des permissions.");
+        return;
+      }
+      
+      const email = document.getElementById("permissionEmail").value.trim();
+      const role = document.getElementById("permissionRole").value;
+      
+      if (!email) {
+        alert("Veuillez entrer un email.");
+        return;
+      }
+      
+      // Validation simple de l'email
+      if (!email.includes('@') || !email.includes('.')) {
+        alert("Email invalide.");
+        return;
+      }
+      
+      const success = await setUserRole(email, role);
+      if (success) {
+        document.getElementById("permissionEmail").value = "";
+        await loadPermissionsList();
+        alert(`✅ ${email} a été ajouté en tant que ${role === 'editor' ? 'Éditeur' : 'Visiteur'}.`);
+      }
+    };
+
+    window.removeUser = async function(email) {
+      if (!currentUser || currentUser.role !== 'admin') {
+        alert("🔒 Seul l'administrateur peut retirer des permissions.");
+        return;
+      }
+      
+      if (email === ADMIN_EMAIL) {
+        alert("❌ Vous ne pouvez pas retirer vos propres permissions d'administrateur.");
+        return;
+      }
+      
+      if (confirm(`❌ Êtes-vous sûr de vouloir retirer les permissions de ${email} ?`)) {
+        const success = await removeUserRole(email);
+        if (success) {
+          await loadPermissionsList();
+          alert(`✅ ${email} a été retiré de la liste des utilisateurs autorisés.`);
+        }
+      }
+    };
+
+    // ===== MISE À JOUR DE L'INTERFACE =====
     function updateUIForAuth() {
       const isAuthenticated = currentUser !== null;
       const isAdmin = isAuthenticated && currentUser.role === 'admin';
-      const isUser = isAuthenticated && currentUser.role === 'user';
-
+      const isEditor = isAuthenticated && (currentUser.role === 'admin' || currentUser.role === 'editor');
+      
       // Boutons d'action
-      document.getElementById("addBtn").style.display = isAuthenticated ? "inline-block" : "none";
-      document.getElementById("editBtn").style.display = isAuthenticated ? "inline-block" : "none";
+      document.getElementById("addBtn").style.display = isEditor ? "inline-block" : "none";
+      document.getElementById("editBtn").style.display = isEditor ? "inline-block" : "none";
       document.getElementById("deleteBtn").style.display = isAdmin ? "inline-block" : "none";
+      document.getElementById("permissionsBtn").style.display = isAdmin ? "inline-block" : "none";
 
       // Boutons d'authentification
       document.getElementById("loginBtn").style.display = isAuthenticated ? "none" : "inline-block";
@@ -868,48 +1117,20 @@
       // Statut
       const statusEl = document.getElementById("authStatus");
       if (isAuthenticated) {
-        const roleText = isAdmin ? "👑 Admin" : "👤 User";
+        const roleText = {
+          'admin': '👑 Admin',
+          'editor': '✏️ Éditeur',
+          'viewer': '👀 Visiteur'
+        }[currentUser.role] || '👀 Visiteur';
+        
         const avatarHtml = currentUser.picture ? 
           `<img src="${currentUser.picture}" class="user-avatar" alt="${currentUser.name}"> ` : "";
         statusEl.innerHTML = `${avatarHtml}${currentUser.name} (${roleText})`;
-        statusEl.className = `auth-status ${isAdmin ? 'admin' : 'user'}`;
+        statusEl.className = `auth-status ${currentUser.role}`;
       } else {
         statusEl.textContent = "🔒 Non connecté";
         statusEl.className = "auth-status";
       }
-
-      updateFormPermissions();
-    }
-
-    function updateFormPermissions() {
-      // Les permissions sont gérées par les boutons d'affichage
-    }
-
-    // Fonction pour vérifier si l'utilisateur a les droits
-    function hasEditPermission() {
-      return currentUser !== null;
-    }
-
-    function hasDeletePermission() {
-      return currentUser && currentUser.role === 'admin';
-    }
-
-    // Vérifier les permissions dans les fonctions de modification
-    function checkEditPermission() {
-      if (!hasEditPermission()) {
-        alert("🔒 Vous devez être connecté pour effectuer cette action.");
-        document.getElementById("authModal").classList.add("active");
-        return false;
-      }
-      return true;
-    }
-
-    function checkDeletePermission() {
-      if (!hasDeletePermission()) {
-        alert("🔒 Seul un administrateur peut supprimer des données.");
-        return false;
-      }
-      return true;
     }
 
     // ===== DONNÉES FAMILLE =====
@@ -923,8 +1144,6 @@
     const backBtn = document.getElementById('backBtn');
     const breadcrumbEl = document.getElementById('breadcrumb');
     const mainHeader = document.getElementById('mainHeader');
-    const editBtn = document.getElementById('editBtn');
-    const deleteBtn = document.getElementById('deleteBtn');
 
     // Charger la famille depuis Firebase
     async function chargerfamille() {
@@ -996,14 +1215,24 @@
       backBtn.style.display = history.length ? "inline-block" : "none";
       updateBreadcrumb();
 
+      const isAuthenticated = currentUser !== null;
+      const isAdmin = isAuthenticated && currentUser.role === 'admin';
+      const isEditor = isAuthenticated && (currentUser.role === 'admin' || currentUser.role === 'editor');
+
       // Afficher les boutons d'action pour la personne courante
+      const editBtn = document.getElementById('editBtn');
+      const deleteBtn = document.getElementById('deleteBtn');
+      const addBtn = document.getElementById('addBtn');
+
       if (person && person !== family) {
-        editBtn.style.display = currentUser ? "inline-block" : "none";
-        deleteBtn.style.display = currentUser && currentUser.role === 'admin' ? "inline-block" : "none";
+        editBtn.style.display = isEditor ? "inline-block" : "none";
+        deleteBtn.style.display = isAdmin ? "inline-block" : "none";
       } else {
         editBtn.style.display = "none";
         deleteBtn.style.display = "none";
       }
+      
+      addBtn.style.display = isEditor ? "inline-block" : "none";
 
       if (!person.children || person.children.length === 0) {
         treeEl.innerHTML = "<p>La liste des enfants n'est pas encore complète.</p>";
@@ -1054,8 +1283,8 @@
       mainHeader.style.display = "block";
       breadcrumbEl.style.display = "none";
       mainHeader.textContent = "🌳 Les fils Gaïda";
-      editBtn.style.display = "none";
-      deleteBtn.style.display = "none";
+      document.getElementById('editBtn').style.display = "none";
+      document.getElementById('deleteBtn').style.display = "none";
 
       if (!family) return;
 
@@ -1119,14 +1348,12 @@
         return;
       }
 
-      // Chercher dans tout l'arbre
       const result = findPathToNode(family, q);
       if (result) {
         history = result.slice(0, -1);
         currentPath = result;
         displayPerson(result[result.length - 1]);
       } else {
-        // Si on est dans une sous-branche, chercher aussi localement
         if (currentNode && currentNode !== family) {
           const localResult = findPathToNode(currentNode, q);
           if (localResult) {
@@ -1136,7 +1363,6 @@
             return;
           }
         }
-        // Sinon, afficher le noeud actuel avec tous ses enfants
         if (currentNode) {
           displayPerson(currentNode);
         }
@@ -1145,7 +1371,10 @@
 
     // ===== AJOUTER UNE PERSONNE =====
     window.openAddModal = function() {
-      if (!checkEditPermission()) return;
+      if (!currentUser || (currentUser.role !== 'admin' && currentUser.role !== 'editor')) {
+        alert("🔒 Vous n'avez pas les permissions pour ajouter des personnes.");
+        return;
+      }
       document.getElementById("addModal").classList.add("active");
       document.getElementById("addName").value = "";
       document.getElementById("addPhoto").value = "";
@@ -1157,7 +1386,10 @@
 
     window.addPerson = async function(e) {
       e.preventDefault();
-      if (!checkEditPermission()) return;
+      if (!currentUser || (currentUser.role !== 'admin' && currentUser.role !== 'editor')) {
+        alert("🔒 Vous n'avez pas les permissions pour ajouter des personnes.");
+        return;
+      }
 
       const name = document.getElementById("addName").value.trim();
       const photo = document.getElementById("addPhoto").value.trim();
@@ -1172,7 +1404,6 @@
         return;
       }
 
-      // Vérifier si le nom existe déjà
       if (currentNode.children && currentNode.children.some(c => c.name === name)) {
         alert(`"${name}" existe déjà dans cette liste.`);
         return;
@@ -1192,7 +1423,6 @@
       const saved = await sauvegarderFamille();
       if (saved) {
         closeAddModal();
-        // Recharger l'affichage
         if (currentNode === family) {
           displayRoot();
         } else {
@@ -1207,13 +1437,15 @@
     let editingParent = null;
 
     window.openEditModal = function() {
-      if (!checkEditPermission()) return;
+      if (!currentUser || (currentUser.role !== 'admin' && currentUser.role !== 'editor')) {
+        alert("🔒 Vous n'avez pas les permissions pour modifier.");
+        return;
+      }
       if (!currentNode || currentNode === family) {
         alert("Sélectionnez une personne à modifier.");
         return;
       }
 
-      // Trouver le parent du noeud courant
       const result = findNodeWithParent(family, currentNode.name);
       if (result) {
         editingPerson = result.node;
@@ -1234,7 +1466,10 @@
 
     window.editPerson = async function(e) {
       e.preventDefault();
-      if (!checkEditPermission()) return;
+      if (!currentUser || (currentUser.role !== 'admin' && currentUser.role !== 'editor')) {
+        alert("🔒 Vous n'avez pas les permissions pour modifier.");
+        return;
+      }
 
       const name = document.getElementById("editName").value.trim();
       const photo = document.getElementById("editPhoto").value.trim();
@@ -1249,7 +1484,6 @@
         return;
       }
 
-      // Vérifier si le nouveau nom existe déjà (sauf si c'est le même)
       if (name !== editingPerson.name && editingParent && editingParent.children) {
         if (editingParent.children.some(c => c.name === name && c !== editingPerson)) {
           alert(`"${name}" existe déjà dans cette liste.`);
@@ -1257,12 +1491,10 @@
         }
       }
 
-      // Mettre à jour les données
       const oldName = editingPerson.name;
       editingPerson.name = name;
       editingPerson.photo = photo || "";
 
-      // Si le nom a changé, mettre à jour currentPath
       if (oldName !== name && currentNode === editingPerson) {
         currentNode.name = name;
       }
@@ -1270,7 +1502,6 @@
       const saved = await sauvegarderFamille();
       if (saved) {
         closeEditModal();
-        // Recharger l'affichage
         if (currentNode === editingPerson || currentNode.name === name) {
           displayPerson(editingPerson);
         } else {
@@ -1285,13 +1516,15 @@
     let deletingParent = null;
 
     window.openDeleteModal = function() {
-      if (!checkDeletePermission()) return;
+      if (!currentUser || currentUser.role !== 'admin') {
+        alert("🔒 Seul l'administrateur peut supprimer des données.");
+        return;
+      }
       if (!currentNode || currentNode === family) {
         alert("Sélectionnez une personne à supprimer.");
         return;
       }
 
-      // Trouver le parent du noeud courant
       const result = findNodeWithParent(family, currentNode.name);
       if (result) {
         deletingPerson = result.node;
@@ -1310,7 +1543,10 @@
     };
 
     window.confirmDelete = async function() {
-      if (!checkDeletePermission()) return;
+      if (!currentUser || currentUser.role !== 'admin') {
+        alert("🔒 Seul l'administrateur peut supprimer des données.");
+        return;
+      }
       if (!deletingPerson || !deletingParent) {
         alert("Erreur : aucune personne à supprimer.");
         return;
@@ -1318,7 +1554,6 @@
 
       const nameToDelete = deletingPerson.name;
 
-      // Supprimer de la liste des enfants du parent
       if (deletingParent.children) {
         deletingParent.children = deletingParent.children.filter(
           child => child !== deletingPerson
@@ -1328,9 +1563,7 @@
       const saved = await sauvegarderFamille();
       if (saved) {
         closeDeleteModal();
-        // Réinitialiser currentPath
         currentPath = [family];
-        // Trouver le nouveau chemin
         const newPath = findPathToNode(family, deletingParent.name);
         if (newPath) {
           currentPath = newPath;
@@ -1353,11 +1586,9 @@
 
     // Initialiser Google Sign-In
     document.addEventListener('DOMContentLoaded', function() {
-      // Initialiser le SDK Google avec un délai pour s'assurer qu'il est chargé
       if (typeof google !== 'undefined' && google.accounts) {
         initGoogleSignIn();
       } else {
-        // Attendre que le SDK soit chargé
         const checkGoogle = setInterval(() => {
           if (typeof google !== 'undefined' && google.accounts) {
             initGoogleSignIn();
